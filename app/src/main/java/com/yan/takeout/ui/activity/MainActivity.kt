@@ -9,7 +9,9 @@ import com.yan.takeout.ui.fragment.HomeFragment
 import com.yan.takeout.ui.fragment.MeFragment
 import com.yan.takeout.ui.fragment.MoreFragment
 import com.yan.takeout.ui.fragment.OrderFragment
+import com.yan.takeout.utils.DeviceUtil
 import kotlinx.android.synthetic.main.activity_main.*
+import org.jetbrains.anko.dip
 
 class MainActivity : AppCompatActivity() {
 
@@ -19,6 +21,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        if (DeviceUtil.checkDeviceHasNavigationBar(this)) {
+            //如果有导航栏，设置底部边距
+            val dp50 = dip(50)
+            ll_main_activity.setPadding(0, 0 ,0, dp50)
+        }
         initBottomBar()
         //默认选中首页
         changeIndex(0)
