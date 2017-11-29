@@ -1,18 +1,27 @@
-package com.yan.takeout
+package com.yan.takeout.ui.activity
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.ViewGroup
+import com.yan.takeout.R
+import com.yan.takeout.ui.fragment.HomeFragment
+import com.yan.takeout.ui.fragment.MeFragment
+import com.yan.takeout.ui.fragment.MoreFragment
+import com.yan.takeout.ui.fragment.OrderFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
+
+    val fragments = listOf(HomeFragment(), OrderFragment(), MeFragment(), MoreFragment())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         initBottomBar()
+        //默认选中首页
+        changeIndex(0)
     }
 
     private fun initBottomBar() {
@@ -35,6 +44,10 @@ class MainActivity : AppCompatActivity() {
                 setEnable(child, true)
             }
         }
+        //切换fragment
+        fragmentManager.beginTransaction()
+                .replace(R.id.main_container, fragments[index])
+                .commit()
     }
 
     private fun setEnable(child: View, isEnable: Boolean) {
