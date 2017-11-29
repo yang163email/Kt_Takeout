@@ -23,8 +23,7 @@ class MainActivity : AppCompatActivity() {
 
         if (DeviceUtil.checkDeviceHasNavigationBar(this)) {
             //如果有导航栏，设置底部边距
-            val dp50 = dip(50)
-            ll_main_activity.setPadding(0, 0 ,0, dp50)
+            ll_main_activity.setPadding(0, 0 ,0, dip(50))
         }
         initBottomBar()
         //默认选中首页
