@@ -7,7 +7,7 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 26
     defaultConfig {
-        applicationId "com.yan.kt_takeout"
+        applicationId "com.yan.takeout"
         minSdkVersion 17
         targetSdkVersion 26
         versionCode 1
