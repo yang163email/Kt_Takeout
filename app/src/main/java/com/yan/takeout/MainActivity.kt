@@ -1,4 +1,4 @@
-package com.yan.kt_takeout
+package com.yan.takeout
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
