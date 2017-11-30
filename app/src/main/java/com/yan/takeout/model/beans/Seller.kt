@@ -3,7 +3,7 @@ package com.yan.takeout.model.beans
 /**
  *  @author      : 楠GG
  *  @date        : 2017/11/30 12:41
- *  @description : TODO
+ *  @description : 商家bean
  */
 
 data class Seller(
