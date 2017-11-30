@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.yan.takeout.R
+import com.yan.takeout.presenter.HomeFragmentPresenter
 import com.yan.takeout.ui.adapter.HomeRvAdapter
 import kotlinx.android.synthetic.main.fragment_home.*
 import org.jetbrains.anko.dip
@@ -22,6 +23,7 @@ class HomeFragment: Fragment() {
 
     private lateinit var homeRvAdapter: HomeRvAdapter
     private val mDataList = mutableListOf<String>()
+    lateinit var homeFragmentPresenter: HomeFragmentPresenter
     //RecyclerView滑动的距离
     var sum = 0
     //颜色渐变的距离
@@ -53,6 +55,7 @@ class HomeFragment: Fragment() {
                 }
             })
         }
+        homeFragmentPresenter = HomeFragmentPresenter(this)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -65,5 +68,13 @@ class HomeFragment: Fragment() {
         (0..100).forEach {
             mDataList.add("条目$it")
         }
+    }
+
+    fun onHomeSuccess() {
+
+    }
+
+    fun onHomeFailed() {
+
     }
 }
