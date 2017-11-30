@@ -5,6 +5,8 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.RelativeLayout
 import com.yan.takeout.R
+import com.yan.takeout.model.beans.Seller
+import kotlinx.android.synthetic.main.item_seller.view.*
 
 /**
  *  @author      : 楠GG
@@ -20,7 +22,7 @@ class HomeSellerItemView: RelativeLayout {
         LayoutInflater.from(context).inflate(R.layout.item_seller, this)
     }
 
-    fun bindView(s: String) {
-
+    fun bindView(seller: Seller) {
+        tv_title.text = seller.name
     }
 }

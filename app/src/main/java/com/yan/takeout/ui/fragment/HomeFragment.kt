@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.yan.takeout.R
+import com.yan.takeout.model.beans.Seller
 import com.yan.takeout.presenter.HomeFragmentPresenter
 import com.yan.takeout.ui.adapter.HomeRvAdapter
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -23,7 +24,7 @@ import org.jetbrains.anko.toast
 class HomeFragment: Fragment() {
 
     private lateinit var homeRvAdapter: HomeRvAdapter
-    private val mDataList = mutableListOf<String>()
+    private val sellerList = mutableListOf<Seller>()
     lateinit var homeFragmentPresenter: HomeFragmentPresenter
     //RecyclerView滑动的距离
     var sum = 0
@@ -43,37 +44,33 @@ class HomeFragment: Fragment() {
             layoutManager = LinearLayoutManager(activity)
             homeRvAdapter = HomeRvAdapter(activity)
             adapter = homeRvAdapter
-            addOnScrollListener(object : RecyclerView.OnScrollListener(){
-                override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
-                    sum += dy
-                    if (sum > distance) {
-                        this@HomeFragment.alpha = 0xff
-                    } else {
-                        this@HomeFragment.alpha = alphaRange * sum / distance
-                    }
-                    ll_title_container.setBackgroundColor(
-                            Color.argb(this@HomeFragment.alpha, 0x31, 0x90, 0xe8))
-                }
-            })
         }
         homeFragmentPresenter = HomeFragmentPresenter(this)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-//        initTempData()
         homeFragmentPresenter.getHomeInfo()
-        homeRvAdapter.setDatas(mDataList)
     }
 
-    private fun initTempData() {
-        (0..100).forEach {
-            mDataList.add("条目$it")
-        }
-    }
+    fun onHomeSuccess(nearbySellers: List<Seller>, otherSellers: List<Seller>) {
+        sellerList.clear()
+        sellerList.addAll(nearbySellers)
+        sellerList.addAll(otherSellers)
+        homeRvAdapter.setDatas(sellerList)
 
-    fun onHomeSuccess() {
-        toast("获取数据成功")
+        rv_home.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+                sum += dy
+                if (sum > distance) {
+                    this@HomeFragment.alpha = 0xff
+                } else {
+                    this@HomeFragment.alpha = alphaRange * sum / distance
+                }
+                ll_title_container.setBackgroundColor(
+                        Color.argb(this@HomeFragment.alpha, 0x31, 0x90, 0xe8))
+            }
+        })
     }
 
     fun onHomeFailed() {

@@ -4,6 +4,7 @@ import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
+import com.yan.takeout.model.beans.Seller
 import com.yan.takeout.ui.views.HomeCommonItemView
 import com.yan.takeout.ui.views.HomeSellerItemView
 import com.yan.takeout.ui.views.HomeTitleItemView
@@ -20,9 +21,9 @@ class HomeRvAdapter(val context: Context): RecyclerView.Adapter<RecyclerView.Vie
         val TYPE_SELLER = 1
     }
 
-    private val mDatas = mutableListOf<String>()
+    private val mDatas = mutableListOf<Seller>()
 
-    fun setDatas(datas: List<String>) {
+    fun setDatas(datas: MutableList<Seller>) {
         mDatas.addAll(datas)
         notifyDataSetChanged()
     }

@@ -75,7 +75,7 @@ class HomeFragmentPresenter(val homeFragment: HomeFragment) {
         //刷新UI
         if (nearbySellers.isNotEmpty() || otherSellers.isNotEmpty()) {
             //有数据，成功页面
-            homeFragment.onHomeSuccess()
+            homeFragment.onHomeSuccess(nearbySellers, otherSellers)
         } else {
             //无数据，异常页面
             homeFragment.onHomeFailed()
