@@ -60,7 +60,8 @@ class HomeFragment: Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        initTempData()
+//        initTempData()
+        homeFragmentPresenter.getHomeInfo()
         homeRvAdapter.setDatas(mDataList)
     }
 
