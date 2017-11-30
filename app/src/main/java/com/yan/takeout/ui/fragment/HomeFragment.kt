@@ -1,14 +1,17 @@
 package com.yan.takeout.ui.fragment
 
 import android.app.Fragment
+import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.yan.takeout.R
 import com.yan.takeout.ui.adapter.HomeRvAdapter
 import kotlinx.android.synthetic.main.fragment_home.*
+import org.jetbrains.anko.dip
 
 /**
  *  @author      : 楠GG
@@ -19,15 +22,37 @@ class HomeFragment: Fragment() {
 
     private lateinit var homeRvAdapter: HomeRvAdapter
     private val mDataList = mutableListOf<String>()
+    //RecyclerView滑动的距离
+    var sum = 0
+    //颜色渐变的距离
+    var distance = 0
+    //alpha渐变范围
+    var alphaRange = 0xff - 0x55
+    var alpha = 0x55
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.fragment_home, null)
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-        rv_home.layoutManager = LinearLayoutManager(activity)
-        homeRvAdapter = HomeRvAdapter(activity)
-        rv_home.adapter = homeRvAdapter
+        distance = dip(120)
+        rv_home.apply {
+            layoutManager = LinearLayoutManager(activity)
+            homeRvAdapter = HomeRvAdapter(activity)
+            adapter = homeRvAdapter
+            addOnScrollListener(object : RecyclerView.OnScrollListener(){
+                override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+                    sum += dy
+                    if (sum > distance) {
+                        this@HomeFragment.alpha = 0xff
+                    } else {
+                        this@HomeFragment.alpha = alphaRange * sum / distance
+                    }
+                    ll_title_container.setBackgroundColor(
+                            Color.argb(this@HomeFragment.alpha, 0x31, 0x90, 0xe8))
+                }
+            })
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
