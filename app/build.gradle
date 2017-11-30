@@ -33,4 +33,8 @@ dependencies {
     implementation 'com.android.support:design:26.1.0'
 
     compile "org.jetbrains.anko:anko-commons:0.10.3"
+    //banner
+    compile 'com.squareup.picasso:picasso:2.3.2'
+    compile 'com.nineoldandroids:library:2.4.0'
+    compile 'com.daimajia.slider:library:1.1.5@aar'
 }

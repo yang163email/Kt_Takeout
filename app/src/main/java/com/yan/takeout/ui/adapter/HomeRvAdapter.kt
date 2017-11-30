@@ -5,6 +5,8 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import com.yan.takeout.ui.views.HomeCommonItemView
+import com.yan.takeout.ui.views.HomeSellerItemView
+import com.yan.takeout.ui.views.HomeTitleItemView
 
 /**
  *  @author      : 楠GG
@@ -32,20 +34,20 @@ class HomeRvAdapter(val context: Context): RecyclerView.Adapter<RecyclerView.Vie
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
         when (getItemViewType(position)) {
             TYPE_TITLE -> {
-                val homeCommonItemView = holder?.itemView as HomeCommonItemView
-                homeCommonItemView.bindView("我是大哥---------------------")
+                val homeTitleItemView = holder?.itemView as HomeTitleItemView
+                homeTitleItemView.bindView("我是大哥---------------------")
             }
             TYPE_SELLER -> {
-                val homeCommonItemView = holder?.itemView as HomeCommonItemView
-                homeCommonItemView.bindView(mDatas[position-1])
+                val homeSellerItemView = holder?.itemView as HomeSellerItemView
+                homeSellerItemView.bindView(mDatas[position-1])
             }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder =
         when (viewType) {
-            TYPE_TITLE -> HomeTitleViewHolder(HomeCommonItemView(context))
-            TYPE_SELLER -> HomeSellerViewHolder(HomeCommonItemView(context))
+            TYPE_TITLE -> HomeTitleViewHolder(HomeTitleItemView(context))
+            TYPE_SELLER -> HomeSellerViewHolder(HomeSellerItemView(context))
             else -> HomeTitleViewHolder(HomeCommonItemView(context))
         }
 
