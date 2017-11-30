@@ -1,13 +1,18 @@
 package com.yan.takeout.presenter
 
 import android.util.Log
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.yan.takeout.model.beans.ResponseInfo
+import com.yan.takeout.model.beans.Seller
 import com.yan.takeout.model.net.TakeoutService
 import com.yan.takeout.ui.fragment.HomeFragment
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 /**
  *  @author      : 楠GG
@@ -22,14 +27,15 @@ class HomeFragmentPresenter(val homeFragment: HomeFragment) {
     val takeoutService: TakeoutService
     init {
         val retrofit = Retrofit.Builder()
-                .baseUrl("https://192.168.56.1:8080/TakeoutService/")
+                .baseUrl("http://192.168.56.1:8080/TakeoutService/")
+                .addConverterFactory(GsonConverterFactory.create())
                 .build()
 
         takeoutService = retrofit.create<TakeoutService>(TakeoutService::class.java)
     }
 
     fun getHomeInfo() {
-        //todo: 需要异步获取网络数据
+        //异步获取网络数据
         val homeCall = takeoutService.getHomeInfo()
         homeCall.enqueue(object : Callback<ResponseInfo>{
             override fun onResponse(call: Call<ResponseInfo>?, response: Response<ResponseInfo>?) {
@@ -53,16 +59,26 @@ class HomeFragmentPresenter(val homeFragment: HomeFragment) {
             }
         })
 
-        //有数据，成功页面
-        homeFragment.onHomeSuccess()
-        //无数据，异常页面
-        homeFragment.onHomeFailed()
     }
 
     /**
      * 解析数据
      */
     private fun parseJson(json: String?) {
+        val gson = Gson()
+        val jsonObject = JSONObject(json)
+        val nearby = jsonObject.getString("nearbySellerList")
+        val nearbySellers: List<Seller> = gson.fromJson(nearby, object : TypeToken<List<Seller>>() {}.type)
+        val other = jsonObject.getString("otherSellerList")
+        val otherSellers: List<Seller> = gson.fromJson(other, object : TypeToken<List<Seller>>(){}.type)
 
+        //刷新UI
+        if (nearbySellers.isNotEmpty() || otherSellers.isNotEmpty()) {
+            //有数据，成功页面
+            homeFragment.onHomeSuccess()
+        } else {
+            //无数据，异常页面
+            homeFragment.onHomeFailed()
+        }
     }
 }

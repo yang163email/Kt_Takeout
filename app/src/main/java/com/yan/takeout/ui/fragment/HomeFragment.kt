@@ -13,6 +13,7 @@ import com.yan.takeout.presenter.HomeFragmentPresenter
 import com.yan.takeout.ui.adapter.HomeRvAdapter
 import kotlinx.android.synthetic.main.fragment_home.*
 import org.jetbrains.anko.dip
+import org.jetbrains.anko.toast
 
 /**
  *  @author      : 楠GG
@@ -72,10 +73,10 @@ class HomeFragment: Fragment() {
     }
 
     fun onHomeSuccess() {
-
+        toast("获取数据成功")
     }
 
     fun onHomeFailed() {
-
+        toast("获取数据失败")
     }
 }
