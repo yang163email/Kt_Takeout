@@ -9,12 +9,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.yan.takeout.R
+import com.yan.takeout.di.component.DaggerHomeFragmentComponent
+import com.yan.takeout.di.module.HomeFragmentModule
 import com.yan.takeout.model.beans.Seller
 import com.yan.takeout.presenter.HomeFragmentPresenter
 import com.yan.takeout.ui.adapter.HomeRvAdapter
 import kotlinx.android.synthetic.main.fragment_home.*
 import org.jetbrains.anko.dip
 import org.jetbrains.anko.toast
+import javax.inject.Inject
 
 /**
  *  @author      : 楠GG
@@ -25,6 +28,8 @@ class HomeFragment: Fragment() {
 
     private lateinit var homeRvAdapter: HomeRvAdapter
     private val sellerList = mutableListOf<Seller>()
+
+    @Inject
     lateinit var homeFragmentPresenter: HomeFragmentPresenter
     //RecyclerView滑动的距离
     var sum = 0
@@ -45,7 +50,12 @@ class HomeFragment: Fragment() {
             homeRvAdapter = HomeRvAdapter(activity)
             adapter = homeRvAdapter
         }
-        homeFragmentPresenter = HomeFragmentPresenter(this)
+//        homeFragmentPresenter = HomeFragmentPresenter(this)
+        //通过dagger2创建presenter
+        DaggerHomeFragmentComponent.builder()
+                .homeFragmentModule(HomeFragmentModule(this))
+                .build()
+                .inject(this)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
