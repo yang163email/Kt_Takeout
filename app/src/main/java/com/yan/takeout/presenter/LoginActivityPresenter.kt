@@ -1,5 +1,8 @@
 package com.yan.takeout.presenter
 
+import com.google.gson.Gson
+import com.yan.takeout.app.TakeoutApp
+import com.yan.takeout.model.beans.User
 import com.yan.takeout.ui.activity.LoginActivity
 
 /**
@@ -18,6 +21,13 @@ class LoginActivityPresenter(val loginActivity: LoginActivity): NetPresenter() {
     }
 
     override fun parseJson(json: String?) {
-
+        val user = Gson().fromJson(json, User::class.java)
+        if (user != null) {
+            //缓存到内存中
+            TakeoutApp.sUser = user
+            loginActivity.onLoginSuccess()
+        }else {
+            loginActivity.onLoginFailed()
+        }
     }
 }

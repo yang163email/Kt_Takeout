@@ -105,7 +105,10 @@ class LoginActivity: AppCompatActivity() {
         iv_login.setOnClickListener {
             val phoneNum = et_user_phone.text.toString().trim()
             val code = et_user_code.text.toString().trim()
-            SMSSDK.submitVerificationCode("86", phoneNum, code)
+//            if (SMSUtil.judgePhoneNums(this, phoneNum) and !code.isEmpty()) {
+//                SMSSDK.submitVerificationCode("86", phoneNum, code)
+//            }
+            loginActivityPresenter.loginByPhone(phoneNum)
         }
     }
 
@@ -113,5 +116,14 @@ class LoginActivity: AppCompatActivity() {
         super.onDestroy()
         SMSSDK.unregisterEventHandler(eventHandler)
         handler.removeCallbacksAndMessages(null)
+    }
+
+    fun onLoginSuccess() {
+        finish()
+        toast("登录成功")
+    }
+
+    fun onLoginFailed() {
+        toast("登录失败")
     }
 }

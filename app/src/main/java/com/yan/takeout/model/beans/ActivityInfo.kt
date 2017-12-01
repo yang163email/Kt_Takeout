@@ -5,7 +5,7 @@ package com.yan.takeout.model.beans
  *  @date        : 2017/11/30 19:53
  *  @description ：todo
  */
-class ActivityInfo(
+data class ActivityInfo(
         var id: Int,
         var type: Int,
         var info: String?)
