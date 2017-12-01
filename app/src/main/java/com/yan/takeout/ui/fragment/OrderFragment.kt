@@ -2,11 +2,12 @@ package com.yan.takeout.ui.fragment
 
 import android.app.Fragment
 import android.os.Bundle
+import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import com.yan.takeout.R
+import kotlinx.android.synthetic.main.fragment_order.*
 
 /**
  *  @author      : 楠GG
@@ -15,8 +16,10 @@ import com.yan.takeout.R
  */
 class OrderFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val view = inflater.inflate(R.layout.fragment_, null)
-        (view as TextView).text = "订单"
-        return view
+        return inflater.inflate(R.layout.fragment_order, null)
+    }
+
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        rv_order_list.layoutManager = LinearLayoutManager(activity)
     }
 }
