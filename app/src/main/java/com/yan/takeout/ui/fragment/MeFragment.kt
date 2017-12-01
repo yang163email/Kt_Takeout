@@ -5,8 +5,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import com.yan.takeout.R
+import com.yan.takeout.ui.activity.LoginActivity
+import kotlinx.android.synthetic.main.fragment_user.*
+import org.jetbrains.anko.startActivity
 
 /**
  *  @author      : 楠GG
@@ -15,8 +17,12 @@ import com.yan.takeout.R
  */
 class MeFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val view = inflater.inflate(R.layout.fragment_, null)
-        (view as TextView).text = "个人"
-        return view
+        return inflater.inflate(R.layout.fragment_user, null)
+    }
+
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        login.setOnClickListener {
+            startActivity<LoginActivity>()
+        }
     }
 }
