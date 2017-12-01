@@ -53,4 +53,6 @@ dependencies {
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
     //mob
     compile name:'SMSSDK-3.0.0',ext:'aar'
+    //ormlite
+    compile 'com.j256.ormlite:ormlite-android:5.0'
 }
