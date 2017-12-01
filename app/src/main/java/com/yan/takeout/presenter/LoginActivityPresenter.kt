@@ -31,8 +31,24 @@ class LoginActivityPresenter(val loginActivity: LoginActivity): NetPresenter() {
             //缓存到本地数据库中
             val takeoutOpenHelper = TakeoutOpenHelper(loginActivity)
             val userDao: Dao<User, Int> = takeoutOpenHelper.getDao(User::class.java)
-            userDao.create(user)
-            Log.d(TAG, "parseJson: 缓存用户数据到数据库中")
+            val users = userDao.queryForAll()
+
+            //申明变量，判断是否为老用户
+            var isOldUser = false
+            users.forEach {
+                if (it.id == user.id) {
+                    isOldUser = true
+                }
+            }
+            if (isOldUser) {
+                //老用户，更新数据库
+                userDao.update(user)
+                Log.d(TAG, "parseJson: 老用户登录")
+            } else {
+                //新用户，新增数据
+                userDao.create(user)
+                Log.d(TAG, "parseJson: 新用户登录")
+            }
             loginActivity.onLoginSuccess()
         }else {
             loginActivity.onLoginFailed()
