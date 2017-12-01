@@ -16,7 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory
  */
 abstract class NetPresenter {
 
-    val TAG = javaClass.simpleName
+    protected val TAG = javaClass.simpleName
 
     val takeoutService: TakeoutService
     init {
