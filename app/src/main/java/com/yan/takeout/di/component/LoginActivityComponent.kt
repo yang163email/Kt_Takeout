@@ -9,7 +9,7 @@ import dagger.Component
  *  @date        : 2017/12/1 14:28
  *  @description : TODO
  */
-@Component(modules = arrayOf(LoginActivityModule::class))
+@Component(modules = [(LoginActivityModule::class)])
 interface LoginActivityComponent {
     fun inject(loginActivity: LoginActivity)
 }

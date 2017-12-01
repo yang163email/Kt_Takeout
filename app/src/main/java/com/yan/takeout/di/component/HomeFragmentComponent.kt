@@ -9,7 +9,7 @@ import dagger.Component
  *  @date        : 2017/11/30 19:03
  *  @description : TODO
  */
-@Component(modules = arrayOf(HomeFragmentModule::class))
+@Component(modules = [(HomeFragmentModule::class)])
 interface HomeFragmentComponent {
 
     fun inject(homeFragment: HomeFragment)
