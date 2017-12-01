@@ -10,8 +10,12 @@ import cn.smssdk.EventHandler
 import cn.smssdk.SMSSDK
 import com.heima.takeout.utils.SMSUtil
 import com.yan.takeout.R
+import com.yan.takeout.di.component.DaggerLoginActivityComponent
+import com.yan.takeout.di.module.LoginActivityModule
+import com.yan.takeout.presenter.LoginActivityPresenter
 import kotlinx.android.synthetic.main.activity_login.*
 import org.jetbrains.anko.toast
+import javax.inject.Inject
 
 /**
  *  @author      : 楠GG
@@ -27,6 +31,8 @@ class LoginActivity: AppCompatActivity() {
     }
 
     var time = 60
+    @Inject
+    lateinit var loginActivityPresenter: LoginActivityPresenter
 
     val handler = @SuppressLint("HandlerLeak")
     object : Handler() {
@@ -64,6 +70,8 @@ class LoginActivity: AppCompatActivity() {
                 } else if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
                     //提交验证码成功
                     Log.d(TAG, "afterEvent: 提交验证码成功")
+                    val phoneNum = et_user_phone.text.toString().trim()
+                    loginActivityPresenter.loginByPhone(phoneNum)
                 }
             }
         }
@@ -74,6 +82,10 @@ class LoginActivity: AppCompatActivity() {
         setContentView(R.layout.activity_login)
         initListener()
 
+        DaggerLoginActivityComponent.builder().
+                loginActivityModule(LoginActivityModule(this))
+                .build()
+                .inject(this)
         // 注册监听器
         SMSSDK.registerEventHandler(eventHandler)
     }
