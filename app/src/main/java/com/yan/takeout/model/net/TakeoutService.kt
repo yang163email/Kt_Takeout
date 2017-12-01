@@ -3,6 +3,7 @@ package com.yan.takeout.model.net
 import com.yan.takeout.model.beans.ResponseInfo
 import retrofit2.Call
 import retrofit2.http.GET
+import retrofit2.http.Query
 
 /**
  *  @author      : 楠GG
@@ -12,4 +13,7 @@ import retrofit2.http.GET
 interface TakeoutService {
     @GET("home")
     fun getHomeInfo(): Call<ResponseInfo>
+
+    @GET("login")
+    fun loginByPhone(@Query("phone") phone: String): Call<ResponseInfo>
 }
