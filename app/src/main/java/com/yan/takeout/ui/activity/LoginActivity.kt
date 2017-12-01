@@ -1,10 +1,14 @@
 package com.yan.takeout.ui.activity
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.os.Handler
+import android.os.Message
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import cn.smssdk.EventHandler
 import cn.smssdk.SMSSDK
+import com.heima.takeout.utils.SMSUtil
 import com.yan.takeout.R
 import kotlinx.android.synthetic.main.activity_login.*
 import org.jetbrains.anko.toast
@@ -17,7 +21,34 @@ import org.jetbrains.anko.toast
 class LoginActivity: AppCompatActivity() {
     companion object {
         val TAG = "LoginActivity"
+        val TIME_MINUS = -1
+        val TIME_IS_OUT = -2
+        val MIN = 1000L
     }
+
+    var time = 60
+
+    val handler = @SuppressLint("HandlerLeak")
+    object : Handler() {
+        @SuppressLint("SetTextI18n")
+        override fun handleMessage(msg: Message?) {
+            when (msg?.what) {
+                TIME_MINUS -> {
+                    tv_user_code.text = "剩余时间($time)秒"
+                    time--
+                    //如果time==0，发送另外一条消息，否则继续发送消息
+                    if (time > 0) sendEmptyMessageDelayed(TIME_MINUS, MIN)
+                    else sendEmptyMessageDelayed(TIME_IS_OUT, MIN)
+                }
+                TIME_IS_OUT -> {
+                    tv_user_code.isEnabled = true
+                    tv_user_code.text = "点击重发"
+                    time = 60
+                }
+            }
+        }
+    }
+
     // 创建EventHandler对象
     val eventHandler = object :EventHandler() {
         override fun afterEvent(event: Int, result: Int, data: Any) {
@@ -51,7 +82,13 @@ class LoginActivity: AppCompatActivity() {
         iv_user_back.setOnClickListener { finish() }
         tv_user_code.setOnClickListener {
             val phoneNum = et_user_phone.text.toString().trim()
-            SMSSDK.getVerificationCode("86", phoneNum)
+            if (SMSUtil.judgePhoneNums(this, phoneNum)) {
+                SMSSDK.getVerificationCode("86", phoneNum)
+                tv_user_code.isEnabled = false
+                handler.sendEmptyMessage(TIME_MINUS)
+            } else {
+                toast("请输入正确的手机号码")
+            }
         }
         iv_login.setOnClickListener {
             val phoneNum = et_user_phone.text.toString().trim()
@@ -63,5 +100,6 @@ class LoginActivity: AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         SMSSDK.unregisterEventHandler(eventHandler)
+        handler.removeCallbacksAndMessages(null)
     }
 }
