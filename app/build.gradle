@@ -8,7 +8,7 @@ apply plugin: 'kotlin-kapt'
 android {
     compileSdkVersion 26
     defaultConfig {
-        applicationId "com.yan.takeout"
+        applicationId "com.yan.takeout.kt"
         minSdkVersion 17
         targetSdkVersion 26
         versionCode 1
@@ -19,6 +19,11 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
         }
     }
 }
