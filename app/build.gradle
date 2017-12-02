@@ -43,8 +43,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     implementation 'com.android.support:design:26.1.0'
-
-    compile "org.jetbrains.anko:anko-commons:0.10.3"
+    compile 'org.jetbrains.anko:anko-commons:0.10.3'
     //banner
     compile 'com.squareup.picasso:picasso:2.3.2'
     compile 'com.nineoldandroids:library:2.4.0'
@@ -57,7 +56,7 @@ dependencies {
     implementation "com.google.dagger:dagger:$daggerVersion"
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
     //mob
-    compile name:'SMSSDK-3.0.0',ext:'aar'
+    compile name: 'SMSSDK-3.0.0', ext: 'aar'
     //ormlite
     compile 'com.j256.ormlite:ormlite-android:5.0'
     //RxJava2
@@ -66,5 +65,7 @@ dependencies {
     compile "io.reactivex.rxjava2:rxjava:$rxjavaVersion"
     //bottomsheet
     compile 'com.flipboard:bottomsheet-core:1.5.3'
-    compile 'com.flipboard:bottomsheet-commons:1.5.3' // optional
+    compile 'com.flipboard:bottomsheet-commons:1.5.3'
+    // optional
+    implementation 'com.android.support:support-v13:26+'
 }
