@@ -23,4 +23,7 @@ interface TakeoutService {
 
     @GET("order")
     fun getOrderListByRxJava(@Query("id") userId: String): Observable<ResponseInfo>
+
+    @GET("business")
+    fun getBusinessInfo(@Query("sellerId") sellerId: String): Call<ResponseInfo>
 }
