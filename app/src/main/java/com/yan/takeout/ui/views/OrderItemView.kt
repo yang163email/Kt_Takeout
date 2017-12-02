@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.RelativeLayout
+import com.heima.takeout.utils.OrderObservable
 import com.yan.takeout.R
 import com.yan.takeout.model.beans.Order
 import kotlinx.android.synthetic.main.item_order_item.view.*
@@ -24,6 +25,7 @@ class OrderItemView: RelativeLayout {
 
     fun bindView(order: Order) {
         tv_order_item_seller_name.text = order.seller?.name
-        tv_order_item_type.text = order.type
+        val orderTypeInfo = OrderObservable.instance.getOrderTypeInfo(order.type ?: "")
+        tv_order_item_type.text = orderTypeInfo
     }
 }

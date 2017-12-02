@@ -25,7 +25,7 @@ import javax.inject.Inject
 class OrderFragment : Fragment() {
     @Inject
     lateinit var orderPresenter: OrderFragmentPresenter
-    lateinit var adapter: OrderRvAdapter
+    lateinit var orderRvAdapter: OrderRvAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.fragment_order, null)
@@ -36,31 +36,46 @@ class OrderFragment : Fragment() {
                 .orderFragmentModule(OrderFragmentModule(this))
                 .build()
                 .inject(this)
-        adapter = OrderRvAdapter(activity)
+        orderRvAdapter = OrderRvAdapter(activity)
 
         rv_order_list.apply {
             layoutManager = LinearLayoutManager(activity)
-            adapter = this@OrderFragment.adapter
+            adapter = orderRvAdapter
+        }
+
+        srl_order.setOnRefreshListener {
+            loadOrderList()
         }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        loadOrderList()
+    }
+
+    /**
+     * 加载订单数据
+     */
+    private fun loadOrderList() {
         val userId = TakeoutApp.sUser.id
         if (-1 == userId) {
             //未登录
             toast("请先登录，再查看订单")
+            srl_order.isEnabled = false
         } else {
+            srl_order.isEnabled = true
             orderPresenter.getOrderList(userId.toString())
         }
     }
 
     fun onOrderSuccess(orderList: List<Order>) {
         //给adapter设置数据
-        adapter.setOrderList(orderList)
+        orderRvAdapter.setOrderList(orderList)
+        srl_order.isRefreshing = false
     }
 
     fun onOrderFailed() {
         toast("服务器繁忙")
+        srl_order.isRefreshing = false
     }
 }
