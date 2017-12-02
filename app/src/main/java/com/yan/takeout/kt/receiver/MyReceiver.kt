@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import cn.jpush.android.api.JPushInterface
-
+import com.heima.takeout.utils.OrderObservable
 
 
 /**
@@ -21,7 +21,10 @@ class MyReceiver: BroadcastReceiver() {
             val message = it.getString(JPushInterface.EXTRA_MESSAGE)
             Log.d(TAG, "onReceive: $message")
             val extra = it.getString(JPushInterface.EXTRA_EXTRA)
-            Log.d(TAG, "onReceive: $extra")
+            extra?.let {
+                //将消息发送给被观察者对象处理
+                OrderObservable.instance.newMsgComing(extra)
+            }
         }
     }
 }
