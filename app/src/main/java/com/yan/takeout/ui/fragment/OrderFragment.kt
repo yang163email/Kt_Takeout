@@ -12,6 +12,7 @@ import com.yan.takeout.di.component.DaggerOrderFragmentComponent
 import com.yan.takeout.di.module.OrderFragmentModule
 import com.yan.takeout.model.beans.Order
 import com.yan.takeout.presenter.OrderFragmentPresenter
+import com.yan.takeout.ui.adapter.OrderRvAdapter
 import kotlinx.android.synthetic.main.fragment_order.*
 import org.jetbrains.anko.toast
 import javax.inject.Inject
@@ -24,17 +25,23 @@ import javax.inject.Inject
 class OrderFragment : Fragment() {
     @Inject
     lateinit var orderPresenter: OrderFragmentPresenter
+    lateinit var adapter: OrderRvAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.fragment_order, null)
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-        rv_order_list.layoutManager = LinearLayoutManager(activity)
         DaggerOrderFragmentComponent.builder()
                 .orderFragmentModule(OrderFragmentModule(this))
                 .build()
                 .inject(this)
+        adapter = OrderRvAdapter(activity)
+
+        rv_order_list.apply {
+            layoutManager = LinearLayoutManager(activity)
+            adapter = this@OrderFragment.adapter
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -50,7 +57,7 @@ class OrderFragment : Fragment() {
 
     fun onOrderSuccess(orderList: List<Order>) {
         //给adapter设置数据
-        toast("获取数据成功")
+        adapter.setOrderList(orderList)
     }
 
     fun onOrderFailed() {
