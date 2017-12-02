@@ -150,6 +150,7 @@
                 <category android:name="com.yan.takeout.kt" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.activity.BusinessActivity"/>
 
         <!-- Required SDK核心功能-->
         <service

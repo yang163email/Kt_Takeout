@@ -64,4 +64,7 @@ dependencies {
     compile "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
     compile "io.reactivex.rxjava2:rxandroid:$rxandroidVersion"
     compile "io.reactivex.rxjava2:rxjava:$rxjavaVersion"
+    //bottomsheet
+    compile 'com.flipboard:bottomsheet-core:1.5.3'
+    compile 'com.flipboard:bottomsheet-commons:1.5.3' // optional
 }

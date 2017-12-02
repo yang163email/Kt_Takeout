@@ -5,9 +5,11 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import com.yan.takeout.kt.model.beans.Seller
+import com.yan.takeout.kt.ui.activity.BusinessActivity
 import com.yan.takeout.kt.ui.views.HomeCommonItemView
 import com.yan.takeout.kt.ui.views.HomeSellerItemView
 import com.yan.takeout.kt.ui.views.HomeTitleItemView
+import org.jetbrains.anko.startActivity
 
 /**
  *  @author      : 楠GG
@@ -41,6 +43,9 @@ class HomeRvAdapter(val context: Context): RecyclerView.Adapter<RecyclerView.Vie
             TYPE_SELLER -> {
                 val homeSellerItemView = holder?.itemView as HomeSellerItemView
                 homeSellerItemView.bindView(mDatas[position-1])
+                homeSellerItemView.setOnClickListener {
+                    context.startActivity<BusinessActivity>()
+                }
             }
         }
     }
