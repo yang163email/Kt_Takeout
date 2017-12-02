@@ -2,12 +2,13 @@ package com.yan.takeout.kt.ui.adapter
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import com.heima.takeout.utils.OrderObservable
 import com.yan.takeout.kt.model.beans.Order
 import com.yan.takeout.kt.ui.views.OrderItemView
+import org.jetbrains.anko.collections.forEachWithIndex
+import org.json.JSONObject
 import java.util.*
 
 /**
@@ -27,7 +28,15 @@ class OrderRvAdapter(val context: Context): RecyclerView.Adapter<RecyclerView.Vi
 
     override fun update(observable: Observable?, arg: Any?) {
         //接收到更新的消息
-        Log.d(TAG, "update: $arg")
+        val jsonObj = JSONObject(arg as String)
+        val pushOrderId = jsonObj.getString("orderId")
+        val pushType = jsonObj.getString("type")
+        orderList.forEachWithIndex { i, order ->
+            if (order.id == pushOrderId) {
+                order.type = pushType
+                notifyItemChanged(i)
+            }
+        }
     }
 
     fun setOrderList(orders: List<Order>) {
