@@ -1,6 +1,7 @@
 package com.yan.takeout.kt.model.net
 
 import com.yan.takeout.kt.model.beans.ResponseInfo
+import io.reactivex.Observable
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -19,4 +20,7 @@ interface TakeoutService {
 
     @GET("order")
     fun getOrderList(@Query("id") userId: String): Call<ResponseInfo>
+
+    @GET("order")
+    fun getOrderListByRxJava(@Query("id") userId: String): Observable<ResponseInfo>
 }
