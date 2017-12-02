@@ -4,6 +4,9 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import cn.jpush.android.api.JPushInterface
+
+
 
 /**
  *  @author      : 楠GG
@@ -13,6 +16,12 @@ import android.util.Log
 class MyReceiver: BroadcastReceiver() {
     val TAG = javaClass.simpleName
     override fun onReceive(context: Context?, intent: Intent?) {
-        Log.d(TAG, "onReceive: 收到消息啦")
+        val bundle = intent?.extras
+        bundle?.let {
+            val message = it.getString(JPushInterface.EXTRA_MESSAGE)
+            Log.d(TAG, "onReceive: $message")
+            val extra = it.getString(JPushInterface.EXTRA_EXTRA)
+            Log.d(TAG, "onReceive: $extra")
+        }
     }
 }
