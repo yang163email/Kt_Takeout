@@ -29,6 +29,8 @@ class BusinessActivity: AppCompatActivity() {
             //如果有导航栏，设置底部边距
             fl_Container.setPadding(0, 0 ,0, dip(48))
         }
+        //ViewPager以及tab设置
         vp.adapter = BusinessFragmentPagerAdapter(fragmentManager, fragments, titles)
+        tabs.setupWithViewPager(vp)
     }
 }

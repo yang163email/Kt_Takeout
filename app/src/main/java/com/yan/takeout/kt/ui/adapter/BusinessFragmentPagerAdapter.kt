@@ -14,4 +14,6 @@ class BusinessFragmentPagerAdapter(fm: FragmentManager?, val fragments: List<Fra
     override fun getItem(position: Int): Fragment = fragments[position]
 
     override fun getCount(): Int = titles.size
+
+    override fun getPageTitle(position: Int): CharSequence = titles[position]
 }
