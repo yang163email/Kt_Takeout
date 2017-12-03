@@ -6,6 +6,7 @@ import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import android.view.animation.*
 import android.widget.RelativeLayout
 import com.heima.takeout.utils.PriceFormater
 import com.squareup.picasso.Picasso
@@ -19,6 +20,10 @@ import kotlinx.android.synthetic.main.item_goods.view.*
  *  @description : 商品条目view
  */
 class GoodsItemView: RelativeLayout {
+
+    companion object {
+        val DURATION = 600L
+    }
 
     private lateinit var goodsInfo: GoodsInfo
 
@@ -43,8 +48,36 @@ class GoodsItemView: RelativeLayout {
      * 添加操作
      */
     private fun doAddOperation(idAdd: Int) {
+        if (goodsInfo.count == 0) {
+            val showAnimationSet: AnimationSet = getShowAnimation()
+            tv_count.startAnimation(showAnimationSet)
+            ib_minus.startAnimation(showAnimationSet)
+        }
         goodsInfo.count++
+        //接口回调
         itemClickListener?.invoke(idAdd)
+    }
+
+    private fun getShowAnimation(): AnimationSet {
+        val animationSet = AnimationSet(true)
+        val alphaAnimation = AlphaAnimation(0f, 1f)
+        animationSet.addAnimation(alphaAnimation)
+
+        val rotateAnimation = RotateAnimation(
+                0f, 720f,
+                Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF, 0.5f)
+        animationSet.addAnimation(rotateAnimation)
+
+        val translateAnimation = TranslateAnimation(
+                Animation.RELATIVE_TO_SELF, 2f,
+                Animation.RELATIVE_TO_SELF, 0f,
+                Animation.RELATIVE_TO_SELF, 0f,
+                Animation.RELATIVE_TO_SELF, 0f)
+        animationSet.addAnimation(translateAnimation)
+
+        animationSet.duration = DURATION
+        return animationSet
     }
 
     @SuppressLint("SetTextI18n")
