@@ -12,5 +12,6 @@ data class GoodsInfo(
     var oldPrice: Int, //原价
     var sellerId: Int,
     var typeId: Int,    //具体大类id
-    var typeName: String   //对应大类id名
+    var typeName: String,   //对应大类id名
+    var count: Int = 0
     )
