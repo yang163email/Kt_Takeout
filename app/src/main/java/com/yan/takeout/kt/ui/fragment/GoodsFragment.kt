@@ -6,15 +6,20 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
 import android.widget.AbsListView
+import android.widget.ImageView
 import com.yan.takeout.kt.R
 import com.yan.takeout.kt.di.component.DaggerGoodsFragmentComponent
 import com.yan.takeout.kt.di.module.GoodsFragmentModule
 import com.yan.takeout.kt.model.beans.GoodsInfo
 import com.yan.takeout.kt.model.beans.GoodsTypeInfo
 import com.yan.takeout.kt.presenter.GoodsFragmentPresenter
+import com.yan.takeout.kt.ui.activity.BusinessActivity
 import com.yan.takeout.kt.ui.adapter.GoodsAdapter
 import com.yan.takeout.kt.ui.adapter.GoodsTypeRvAdapter
+import com.yan.takeout.kt.utils.AnimListenerAdapter
+import com.yan.takeout.kt.utils.AnimationUtil
 import kotlinx.android.synthetic.main.fragment_goods.*
 import javax.inject.Inject
 
@@ -24,6 +29,8 @@ import javax.inject.Inject
  *  @description : 商品fragment
  */
 class GoodsFragment : Fragment() {
+    val TAG = javaClass.simpleName
+
     @Inject
     lateinit var goodsPresenter: GoodsFragmentPresenter
     private lateinit var goodsAdapter: GoodsAdapter
@@ -31,6 +38,8 @@ class GoodsFragment : Fragment() {
     private lateinit var goodsTypeList: List<GoodsTypeInfo>
     //右侧所有商品集合
     private val goodsList = mutableListOf<GoodsInfo>()
+
+    private var animShowing = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.fragment_goods, container, false)
@@ -50,8 +59,13 @@ class GoodsFragment : Fragment() {
         }
         goodsAdapter = GoodsAdapter(activity)
         slhlv.adapter = goodsAdapter
+
+        initListener()
+    }
+
+    private fun initListener() {
         //监听左侧条目点击事件
-        (rv_goods_type.adapter as GoodsTypeRvAdapter).setTypeClickListener {
+        goodsTypeAdapter.setTypeClickListener {
             //遍历所有商品，找到position
             val position = goodsPresenter.getGoodsPositionByTypeId(goodsList, it)
             //选中对应右侧position
@@ -64,12 +78,49 @@ class GoodsFragment : Fragment() {
             //找到左侧列表的位置,设置数据
             val typePosition = goodsPresenter.getTypePositionByTypeId(goodsTypeList, typeId)
             if (view.id == R.id.ib_add) {
+                //红点数++
                 goodsTypeList[typePosition].redDotCount++
-            }else {
+                showParabolaAnim(view)
+            } else {
                 goodsTypeList[typePosition].redDotCount--
             }
             goodsTypeAdapter.setData(goodsTypeList)
+
         }
+    }
+
+    private fun showParabolaAnim(view: View) {
+        //动画正在show，不再进行添加显示
+        if (animShowing) return
+        //复制一份+图片
+        val ib = ImageView(activity)
+        ib.setBackgroundResource(R.mipmap.button_add)
+        //获取原始位置
+        val srcLocation = IntArray(2)
+        view.getLocationInWindow(srcLocation)
+        ib.x = srcLocation[0].toFloat()
+        ib.y = srcLocation[1].toFloat()
+        //添加一个ImageButton
+        (activity as BusinessActivity).addImageButton(ib, view.width, view.height)
+
+        //执行抛物线动画
+        val destLocation = (activity as BusinessActivity).getCartLocation()
+        val parabolaAnim = AnimationUtil.getParabolaAnimation(srcLocation, destLocation)
+        ib.startAnimation(parabolaAnim)
+        parabolaAnim.setAnimationListener(object : AnimListenerAdapter() {
+            override fun onAnimationStart(animation: Animation?) {
+                animShowing = true
+            }
+
+            override fun onAnimationEnd(animation: Animation?) {
+                animShowing = false
+                //动画结束，移除+图片
+                val viewParent = ib.parent
+                viewParent?.let {
+                    (it as ViewGroup).removeView(ib)
+                }
+            }
+        })
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

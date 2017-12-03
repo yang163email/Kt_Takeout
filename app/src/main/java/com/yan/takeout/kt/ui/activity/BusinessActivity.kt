@@ -2,6 +2,7 @@ package com.yan.takeout.kt.ui.activity
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.widget.ImageView
 import com.yan.takeout.kt.R
 import com.yan.takeout.kt.ui.adapter.BusinessFragmentPagerAdapter
 import com.yan.takeout.kt.ui.fragment.CommentsFragment
@@ -32,5 +33,15 @@ class BusinessActivity: AppCompatActivity() {
         //ViewPager以及tab设置
         vp.adapter = BusinessFragmentPagerAdapter(fragmentManager, fragments, titles)
         tabs.setupWithViewPager(vp)
+    }
+
+    fun addImageButton(ib: ImageView, width: Int, height: Int) {
+        fl_Container.addView(ib, width, height)
+    }
+
+    fun getCartLocation(): IntArray {
+        val srcLocation = IntArray(2)
+        imgCart.getLocationInWindow(srcLocation)
+        return srcLocation
     }
 }

@@ -4,15 +4,15 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Paint
 import android.util.AttributeSet
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.view.animation.*
+import android.view.animation.AnimationSet
 import android.widget.RelativeLayout
 import com.heima.takeout.utils.PriceFormater
 import com.squareup.picasso.Picasso
 import com.yan.takeout.kt.R
 import com.yan.takeout.kt.model.beans.GoodsInfo
+import com.yan.takeout.kt.utils.AnimationUtil
 import kotlinx.android.synthetic.main.item_goods.view.*
 
 /**
@@ -21,12 +21,6 @@ import kotlinx.android.synthetic.main.item_goods.view.*
  *  @description : 商品条目view
  */
 class GoodsItemView: RelativeLayout {
-    val TAG = javaClass.simpleName
-
-    companion object {
-        //动画时间
-        val DURATION = 600L
-    }
 
     private lateinit var goodsInfo: GoodsInfo
 
@@ -62,7 +56,7 @@ class GoodsItemView: RelativeLayout {
      */
     private fun doMinusOperation() {
         if (goodsInfo.count == 1) {
-            val showAnimationSet: AnimationSet = getAnimationSet(false)
+            val showAnimationSet: AnimationSet = AnimationUtil.getAnimationSet(false)
             tv_count.startAnimation(showAnimationSet)
             ib_minus.startAnimation(showAnimationSet)
         }
@@ -74,49 +68,11 @@ class GoodsItemView: RelativeLayout {
      */
     private fun doAddOperation() {
         if (goodsInfo.count == 0) {
-            val showAnimationSet: AnimationSet = getAnimationSet(true)
+            val showAnimationSet: AnimationSet = AnimationUtil.getAnimationSet(true)
             tv_count.startAnimation(showAnimationSet)
             ib_minus.startAnimation(showAnimationSet)
         }
         goodsInfo.count++
-
-        val srcLocation = IntArray(2)
-        ib_add.getLocationInWindow(srcLocation)
-        Log.d(TAG, "doAddOperation: ${srcLocation[0]},${srcLocation[1]}")
-    }
-
-    private fun getAnimationSet(isShow: Boolean): AnimationSet {
-        val fromAlpha: Float; val toAlpha: Float
-        val fromDegrees: Float; val toDegrees: Float
-        val fromXValue: Float; val toXValue: Float
-        if (isShow) {
-            fromAlpha = 0f; toAlpha = 1f
-            fromDegrees = 0f; toDegrees = 720f
-            fromXValue = 2f; toXValue = 0f
-        } else {
-            fromAlpha = 1f; toAlpha = 0f
-            fromDegrees = 720f; toDegrees = 0f
-            fromXValue = 0f; toXValue = 2f
-        }
-        val animationSet = AnimationSet(true)
-        val alphaAnimation = AlphaAnimation(fromAlpha, toAlpha)
-        animationSet.addAnimation(alphaAnimation)
-
-        val rotateAnimation = RotateAnimation(
-                fromDegrees, toDegrees,
-                Animation.RELATIVE_TO_SELF, 0.5f,
-                Animation.RELATIVE_TO_SELF, 0.5f)
-        animationSet.addAnimation(rotateAnimation)
-
-        val translateAnimation = TranslateAnimation(
-                Animation.RELATIVE_TO_SELF, fromXValue,
-                Animation.RELATIVE_TO_SELF, toXValue,
-                Animation.RELATIVE_TO_SELF, 0f,
-                Animation.RELATIVE_TO_SELF, 0f)
-        animationSet.addAnimation(translateAnimation)
-
-        animationSet.duration = DURATION
-        return animationSet
     }
 
     @SuppressLint("SetTextI18n")
