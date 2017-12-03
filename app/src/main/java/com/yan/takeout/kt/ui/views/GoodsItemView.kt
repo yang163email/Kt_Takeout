@@ -19,16 +19,37 @@ import kotlinx.android.synthetic.main.item_goods.view.*
  *  @description : 商品条目view
  */
 class GoodsItemView: RelativeLayout {
+
+    private lateinit var goodsInfo: GoodsInfo
+
     constructor(context: Context?) : super(context)
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
     constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     init {
         LayoutInflater.from(context).inflate(R.layout.item_goods, this)
+        ib_add.setOnClickListener { doAddOperation(R.id.ib_add) }
+        ib_minus.setOnClickListener { doMinusOperation(R.id.ib_minus) }
+    }
+
+    /**
+     * 减号操作
+     */
+    private fun doMinusOperation(idMinus: Int) {
+
+    }
+
+    /**
+     * 添加操作
+     */
+    private fun doAddOperation(idAdd: Int) {
+        goodsInfo.count++
+        itemClickListener?.invoke(idAdd)
     }
 
     @SuppressLint("SetTextI18n")
     fun bindView(goodsInfo: GoodsInfo) {
+        this.goodsInfo = goodsInfo
         tv_name.text = goodsInfo.name
         Picasso.with(context).load(goodsInfo.icon).into(iv_icon)
         tv_form.text = goodsInfo.form
@@ -45,7 +66,7 @@ class GoodsItemView: RelativeLayout {
         } else {
             tv_oldprice.visibility = View.VISIBLE
         }
-
+        tv_count.text = goodsInfo.count.toString()
         if (goodsInfo.count > 0) {
             tv_count.visibility = View.VISIBLE
             ib_minus.visibility = View.VISIBLE
@@ -53,5 +74,11 @@ class GoodsItemView: RelativeLayout {
             tv_count.visibility = View.INVISIBLE
             ib_minus.visibility = View.INVISIBLE
         }
+    }
+
+    var itemClickListener: ((id: Int) -> Unit)? = null
+
+    fun setOnItemClickListener(listener: (id: Int) -> Unit) {
+        itemClickListener = listener
     }
 }
