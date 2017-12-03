@@ -26,8 +26,11 @@ class GoodsTypeRvAdapter(val context: Context): RecyclerView.Adapter<RecyclerVie
         val goodsTypeItemView = holder?.itemView as GoodsTypeItemView
         goodsTypeItemView.bindView(goodsTypeList[position], selectPosition == position)
         goodsTypeItemView.setOnClickListener{
+            //左侧RecyclerView条目变化
             selectPosition = position
             notifyDataSetChanged()
+            //监听器调用
+            typeListener?.invoke(goodsTypeList[position].id)
         }
     }
 
@@ -41,4 +44,9 @@ class GoodsTypeRvAdapter(val context: Context): RecyclerView.Adapter<RecyclerVie
 
     class GoodsTypeViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView)
 
+    private var typeListener: ((typeId: Int) -> Unit)? = null
+
+    fun setTypeClickListener(listener: (typeId: Int) -> Unit) {
+        typeListener = listener
+    }
 }

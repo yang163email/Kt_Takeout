@@ -26,6 +26,8 @@ class GoodsFragment : Fragment() {
     @Inject
     lateinit var goodsPresenter: GoodsFragmentPresenter
     private lateinit var goodsAdapter: GoodsAdapter
+    //右侧所有商品集合
+    private val goodsList = mutableListOf<GoodsInfo>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.fragment_goods, container, false)
@@ -42,6 +44,13 @@ class GoodsFragment : Fragment() {
         }
         goodsAdapter = GoodsAdapter(activity)
         slhlv.adapter = goodsAdapter
+        //监听左侧条目点击事件
+        (rv_goods_type.adapter as GoodsTypeRvAdapter).setTypeClickListener {
+            //遍历所有商品，找到position
+            val position = goodsPresenter.getGoodsPositionByTypeId(goodsList, it)
+            //选中对应右侧position
+            slhlv.setSelection(position)
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -52,7 +61,6 @@ class GoodsFragment : Fragment() {
     fun onLoadBusinessSuccess(goodsTypeList: List<GoodsTypeInfo>) {
         (rv_goods_type.adapter as GoodsTypeRvAdapter).setData(goodsTypeList)
 
-        val goodsList = mutableListOf<GoodsInfo>()
         goodsTypeList.forEach { outer->
             val list = outer.list
             list.forEach { inner->
@@ -60,6 +68,7 @@ class GoodsFragment : Fragment() {
                 inner.typeId = outer.id
                 inner.typeName = outer.name
             }
+            //添加到所有商品集合中
             goodsList.addAll(list)
         }
         goodsAdapter.setData(goodsList)
