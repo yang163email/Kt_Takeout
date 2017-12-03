@@ -1,10 +1,12 @@
 package com.yan.takeout.kt.ui.adapter
 
 import android.content.Context
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
+import com.yan.takeout.kt.R
 import com.yan.takeout.kt.model.beans.GoodsInfo
 import com.yan.takeout.kt.ui.views.GoodsItemView
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter
@@ -46,11 +48,12 @@ class GoodsAdapter(val context: Context): BaseAdapter(), StickyListHeadersAdapte
 
     override fun getCount(): Int = goodsList.size
 
-    override fun getHeaderId(position: Int): Long = 0
+    override fun getHeaderId(position: Int): Long = goodsList[position].typeId.toLong()
 
     override fun getHeaderView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val textView = TextView(context)
-        textView.text = "我是商品类别1"
+        val textView =
+                LayoutInflater.from(context).inflate(R.layout.item_type_header, parent, false) as TextView
+        textView.text = goodsList[position].typeName
         return textView
     }
 

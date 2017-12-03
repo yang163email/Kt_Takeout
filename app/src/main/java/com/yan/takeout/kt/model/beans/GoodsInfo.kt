@@ -10,4 +10,7 @@ data class GoodsInfo(
     var isNew: Boolean, //是否是新产品
     var newPrice: String, //新价
     var oldPrice: Int, //原价
-    var sellerId: Int = 0)
+    var sellerId: Int,
+    var typeId: Int,    //具体大类id
+    var typeName: String   //对应大类id名
+    )

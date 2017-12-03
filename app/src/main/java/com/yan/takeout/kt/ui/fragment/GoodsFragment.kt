@@ -53,8 +53,14 @@ class GoodsFragment : Fragment() {
         (rv_goods_type.adapter as GoodsTypeRvAdapter).setData(goodsTypeList)
 
         val goodsList = mutableListOf<GoodsInfo>()
-        goodsTypeList.forEach {
-            goodsList.addAll(it.list)
+        goodsTypeList.forEach { outer->
+            val list = outer.list
+            list.forEach { inner->
+                //遍历，对每个商品对应typeId，typeName进行赋值
+                inner.typeId = outer.id
+                inner.typeName = outer.name
+            }
+            goodsList.addAll(list)
         }
         goodsAdapter.setData(goodsList)
     }
