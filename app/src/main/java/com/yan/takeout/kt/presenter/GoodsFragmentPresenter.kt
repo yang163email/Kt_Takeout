@@ -29,10 +29,26 @@ class GoodsFragmentPresenter(val goodsFragment: GoodsFragment): NetPresenter() {
         goodsFragment.onLoadBusinessSuccess(goodsTypeList)
     }
 
+    /**
+     * 根据商品类别id找到对应商品位置
+     */
     fun getGoodsPositionByTypeId(goodsList: MutableList<GoodsInfo>, typeId: Int): Int {
         goodsList.forEachWithIndex { i, goodsInfo ->
             if (goodsInfo.typeId == typeId) {
                 //找到了
+                return i
+            }
+        }
+        //默认-1表示为找到
+        return -1
+    }
+
+    /**
+     * 根据typeId找到对应左侧的position
+     */
+    fun getTypePositionByTypeId(goodsTypeList: List<GoodsTypeInfo>, newTypeId: Int): Int {
+        goodsTypeList.forEachWithIndex { i, goodsTypeInfo ->
+            if (goodsTypeInfo.id == newTypeId) {
                 return i
             }
         }

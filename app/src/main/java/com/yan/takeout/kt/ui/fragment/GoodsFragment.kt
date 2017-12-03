@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AbsListView
 import com.yan.takeout.kt.R
 import com.yan.takeout.kt.di.component.DaggerGoodsFragmentComponent
 import com.yan.takeout.kt.di.module.GoodsFragmentModule
@@ -33,6 +34,8 @@ class GoodsFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_goods, container, false)
     }
 
+    private lateinit var goodsTypeAdapter: GoodsTypeRvAdapter
+
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         DaggerGoodsFragmentComponent.builder()
                 .goodsFragmentModule(GoodsFragmentModule(this))
@@ -40,7 +43,8 @@ class GoodsFragment : Fragment() {
                 .inject(this)
         rv_goods_type.apply {
             layoutManager = LinearLayoutManager(activity)
-            adapter = GoodsTypeRvAdapter(activity)
+            goodsTypeAdapter = GoodsTypeRvAdapter(activity)
+            adapter = goodsTypeAdapter
         }
         goodsAdapter = GoodsAdapter(activity)
         slhlv.adapter = goodsAdapter
@@ -59,7 +63,7 @@ class GoodsFragment : Fragment() {
     }
 
     fun onLoadBusinessSuccess(goodsTypeList: List<GoodsTypeInfo>) {
-        (rv_goods_type.adapter as GoodsTypeRvAdapter).setData(goodsTypeList)
+        goodsTypeAdapter.setData(goodsTypeList)
 
         goodsTypeList.forEach { outer->
             val list = outer.list
@@ -72,5 +76,31 @@ class GoodsFragment : Fragment() {
             goodsList.addAll(list)
         }
         goodsAdapter.setData(goodsList)
+        //有数据才进行滚动监听
+        handleScrollEvent(goodsTypeList)
+    }
+
+    /**
+     * 处理右侧商品滚动事件
+     */
+    private fun handleScrollEvent(goodsTypeList: List<GoodsTypeInfo>) {
+        slhlv.setOnScrollListener(object : AbsListView.OnScrollListener {
+            override fun onScroll(view: AbsListView?, firstVisibleItem: Int, visibleItemCount: Int, totalItemCount: Int) {
+                //首先找到左侧当前选中的position
+                val oldPosition = goodsTypeAdapter.selectPosition
+                //根据当前显示的第一个可见的position找到对应的typeId
+                val newTypeId = goodsList[firstVisibleItem].typeId
+                //根据typeid找到对应左侧的position
+                val newPosition = goodsPresenter.getTypePositionByTypeId(goodsTypeList, newTypeId)
+                if (oldPosition != newPosition) {
+                    //如果当前position与新的position不一致，需要更新类别position的位置
+                    goodsTypeAdapter.selectPosition = newPosition
+                    goodsTypeAdapter.notifyDataSetChanged()
+                }
+            }
+
+            override fun onScrollStateChanged(view: AbsListView?, scrollState: Int) {
+            }
+        })
     }
 }
