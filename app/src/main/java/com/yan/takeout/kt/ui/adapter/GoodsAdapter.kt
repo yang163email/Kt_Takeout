@@ -40,7 +40,10 @@ class GoodsAdapter(val context: Context): BaseAdapter(), StickyListHeadersAdapte
         val goodsItemView = goodsItemHolder.itemView as GoodsItemView
         goodsItemView.bindView(goodsList[position])
         //设置子view点击事件
-        goodsItemView.setOnItemClickListener { notifyDataSetChanged() }
+        goodsItemView.setOnItemClickListener {
+            itemClickListener?.invoke(it, goodsList[position])
+            notifyDataSetChanged()
+        }
         return itemView
     }
 
@@ -57,6 +60,12 @@ class GoodsAdapter(val context: Context): BaseAdapter(), StickyListHeadersAdapte
                 LayoutInflater.from(context).inflate(R.layout.item_type_header, parent, false) as TextView
         textView.text = goodsList[position].typeName
         return textView
+    }
+
+    private var itemClickListener: ((view: View, goodsInfo: GoodsInfo) -> Unit)? = null
+
+    fun setOnItemClickListener(listener: (view: View, goodsInfo: GoodsInfo) -> Unit) {
+        itemClickListener = listener
     }
 
     class GoodsItemHolder(val itemView: View)

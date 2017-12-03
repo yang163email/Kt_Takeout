@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.RelativeLayout
 import com.yan.takeout.kt.R
 import com.yan.takeout.kt.model.beans.GoodsTypeInfo
@@ -36,5 +37,11 @@ class GoodsTypeItemView: RelativeLayout {
             type.typeface = Typeface.DEFAULT
         }
         type.text = goodsTypeInfo.name
+        tvRedDotCount.text = goodsTypeInfo.redDotCount.toString()
+        if (goodsTypeInfo.redDotCount > 0) {
+            tvRedDotCount.visibility = View.VISIBLE
+        } else {
+            tvRedDotCount.visibility = View.GONE
+        }
     }
 }

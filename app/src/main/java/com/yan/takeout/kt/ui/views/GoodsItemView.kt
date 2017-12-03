@@ -22,6 +22,7 @@ import kotlinx.android.synthetic.main.item_goods.view.*
 class GoodsItemView: RelativeLayout {
 
     companion object {
+        //动画时间
         val DURATION = 600L
     }
 
@@ -33,36 +34,49 @@ class GoodsItemView: RelativeLayout {
 
     init {
         LayoutInflater.from(context).inflate(R.layout.item_goods, this)
-        ib_add.setOnClickListener { doAddOperation(R.id.ib_add) }
-        ib_minus.setOnClickListener { doMinusOperation(R.id.ib_minus) }
+        ib_add.setOnClickListener {
+            doAddOperation()
+            handleRedDotCount(ib_add)
+        }
+        ib_minus.setOnClickListener {
+            if (goodsInfo.count > 0) {
+                //只有数量大于0才能点击
+                doMinusOperation()
+                handleRedDotCount(ib_minus)
+            }
+        }
+    }
+
+    /**
+     * 处理type的红点
+     */
+    private fun handleRedDotCount(view: View) {
+        //接口回调
+        itemClickListener?.invoke(view)
     }
 
     /**
      * 减号操作
      */
-    private fun doMinusOperation(idMinus: Int) {
+    private fun doMinusOperation() {
         if (goodsInfo.count == 1) {
             val showAnimationSet: AnimationSet = getAnimationSet(false)
             tv_count.startAnimation(showAnimationSet)
             ib_minus.startAnimation(showAnimationSet)
         }
         goodsInfo.count--
-        //接口回调
-        itemClickListener?.invoke(idMinus)
     }
 
     /**
      * 添加操作
      */
-    private fun doAddOperation(idAdd: Int) {
+    private fun doAddOperation() {
         if (goodsInfo.count == 0) {
             val showAnimationSet: AnimationSet = getAnimationSet(true)
             tv_count.startAnimation(showAnimationSet)
             ib_minus.startAnimation(showAnimationSet)
         }
         goodsInfo.count++
-        //接口回调
-        itemClickListener?.invoke(idAdd)
     }
 
     private fun getAnimationSet(isShow: Boolean): AnimationSet {
@@ -128,9 +142,9 @@ class GoodsItemView: RelativeLayout {
         }
     }
 
-    private var itemClickListener: ((id: Int) -> Unit)? = null
+    private var itemClickListener: ((view: View) -> Unit)? = null
 
-    fun setOnItemClickListener(listener: (id: Int) -> Unit) {
+    fun setOnItemClickListener(listener: (view: View) -> Unit) {
         itemClickListener = listener
     }
 }

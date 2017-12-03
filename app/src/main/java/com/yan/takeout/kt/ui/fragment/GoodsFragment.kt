@@ -27,6 +27,8 @@ class GoodsFragment : Fragment() {
     @Inject
     lateinit var goodsPresenter: GoodsFragmentPresenter
     private lateinit var goodsAdapter: GoodsAdapter
+    //左侧所有类型集合
+    private lateinit var goodsTypeList: List<GoodsTypeInfo>
     //右侧所有商品集合
     private val goodsList = mutableListOf<GoodsInfo>()
 
@@ -55,6 +57,19 @@ class GoodsFragment : Fragment() {
             //选中对应右侧position
             slhlv.setSelection(position)
         }
+
+        goodsAdapter.setOnItemClickListener { view, goodsInfo ->
+            //需要找到当前点击的typeId
+            val typeId = goodsInfo.typeId
+            //找到左侧列表的位置,设置数据
+            val typePosition = goodsPresenter.getTypePositionByTypeId(goodsTypeList, typeId)
+            if (view.id == R.id.ib_add) {
+                goodsTypeList[typePosition].redDotCount++
+            }else {
+                goodsTypeList[typePosition].redDotCount--
+            }
+            goodsTypeAdapter.setData(goodsTypeList)
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -63,6 +78,7 @@ class GoodsFragment : Fragment() {
     }
 
     fun onLoadBusinessSuccess(goodsTypeList: List<GoodsTypeInfo>) {
+        this.goodsTypeList = goodsTypeList
         goodsTypeAdapter.setData(goodsTypeList)
 
         goodsTypeList.forEach { outer->
@@ -95,6 +111,7 @@ class GoodsFragment : Fragment() {
                 if (oldPosition != newPosition) {
                     //如果当前position与新的position不一致，需要更新类别position的位置
                     goodsTypeAdapter.selectPosition = newPosition
+                    rv_goods_type.scrollToPosition(newPosition)
                     goodsTypeAdapter.notifyDataSetChanged()
                 }
             }
