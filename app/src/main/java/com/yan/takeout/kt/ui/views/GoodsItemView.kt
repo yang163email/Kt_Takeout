@@ -41,7 +41,14 @@ class GoodsItemView: RelativeLayout {
      * 减号操作
      */
     private fun doMinusOperation(idMinus: Int) {
-
+        if (goodsInfo.count == 1) {
+            val showAnimationSet: AnimationSet = getAnimationSet(false)
+            tv_count.startAnimation(showAnimationSet)
+            ib_minus.startAnimation(showAnimationSet)
+        }
+        goodsInfo.count--
+        //接口回调
+        itemClickListener?.invoke(idMinus)
     }
 
     /**
@@ -49,7 +56,7 @@ class GoodsItemView: RelativeLayout {
      */
     private fun doAddOperation(idAdd: Int) {
         if (goodsInfo.count == 0) {
-            val showAnimationSet: AnimationSet = getShowAnimation()
+            val showAnimationSet: AnimationSet = getAnimationSet(true)
             tv_count.startAnimation(showAnimationSet)
             ib_minus.startAnimation(showAnimationSet)
         }
@@ -58,20 +65,32 @@ class GoodsItemView: RelativeLayout {
         itemClickListener?.invoke(idAdd)
     }
 
-    private fun getShowAnimation(): AnimationSet {
+    private fun getAnimationSet(isShow: Boolean): AnimationSet {
+        val fromAlpha: Float; val toAlpha: Float
+        val fromDegrees: Float; val toDegrees: Float
+        val fromXValue: Float; val toXValue: Float
+        if (isShow) {
+            fromAlpha = 0f; toAlpha = 1f
+            fromDegrees = 0f; toDegrees = 720f
+            fromXValue = 2f; toXValue = 0f
+        } else {
+            fromAlpha = 1f; toAlpha = 0f
+            fromDegrees = 720f; toDegrees = 0f
+            fromXValue = 0f; toXValue = 2f
+        }
         val animationSet = AnimationSet(true)
-        val alphaAnimation = AlphaAnimation(0f, 1f)
+        val alphaAnimation = AlphaAnimation(fromAlpha, toAlpha)
         animationSet.addAnimation(alphaAnimation)
 
         val rotateAnimation = RotateAnimation(
-                0f, 720f,
+                fromDegrees, toDegrees,
                 Animation.RELATIVE_TO_SELF, 0.5f,
                 Animation.RELATIVE_TO_SELF, 0.5f)
         animationSet.addAnimation(rotateAnimation)
 
         val translateAnimation = TranslateAnimation(
-                Animation.RELATIVE_TO_SELF, 2f,
-                Animation.RELATIVE_TO_SELF, 0f,
+                Animation.RELATIVE_TO_SELF, fromXValue,
+                Animation.RELATIVE_TO_SELF, toXValue,
                 Animation.RELATIVE_TO_SELF, 0f,
                 Animation.RELATIVE_TO_SELF, 0f)
         animationSet.addAnimation(translateAnimation)
@@ -109,7 +128,7 @@ class GoodsItemView: RelativeLayout {
         }
     }
 
-    var itemClickListener: ((id: Int) -> Unit)? = null
+    private var itemClickListener: ((id: Int) -> Unit)? = null
 
     fun setOnItemClickListener(listener: (id: Int) -> Unit) {
         itemClickListener = listener
