@@ -9,8 +9,10 @@ import android.view.ViewGroup
 import com.yan.takeout.kt.R
 import com.yan.takeout.kt.di.component.DaggerGoodsFragmentComponent
 import com.yan.takeout.kt.di.module.GoodsFragmentModule
+import com.yan.takeout.kt.model.beans.GoodsInfo
 import com.yan.takeout.kt.model.beans.GoodsTypeInfo
 import com.yan.takeout.kt.presenter.GoodsFragmentPresenter
+import com.yan.takeout.kt.ui.adapter.GoodsAdapter
 import com.yan.takeout.kt.ui.adapter.GoodsTypeRvAdapter
 import kotlinx.android.synthetic.main.fragment_goods.*
 import javax.inject.Inject
@@ -23,6 +25,7 @@ import javax.inject.Inject
 class GoodsFragment : Fragment() {
     @Inject
     lateinit var goodsPresenter: GoodsFragmentPresenter
+    private lateinit var goodsAdapter: GoodsAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.fragment_goods, container, false)
@@ -37,6 +40,8 @@ class GoodsFragment : Fragment() {
             layoutManager = LinearLayoutManager(activity)
             adapter = GoodsTypeRvAdapter(activity)
         }
+        goodsAdapter = GoodsAdapter(activity)
+        slhlv.adapter = goodsAdapter
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -46,5 +51,11 @@ class GoodsFragment : Fragment() {
 
     fun onLoadBusinessSuccess(goodsTypeList: List<GoodsTypeInfo>) {
         (rv_goods_type.adapter as GoodsTypeRvAdapter).setData(goodsTypeList)
+
+        val goodsList = mutableListOf<GoodsInfo>()
+        goodsTypeList.forEach {
+            goodsList.addAll(it.list)
+        }
+        goodsAdapter.setData(goodsList)
     }
 }
