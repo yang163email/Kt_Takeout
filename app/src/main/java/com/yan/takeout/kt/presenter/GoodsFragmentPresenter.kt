@@ -24,5 +24,6 @@ class GoodsFragmentPresenter(val goodsFragment: GoodsFragment): NetPresenter() {
         val allStr = jsonObj.getString("list")
         val goodsTypeList: List<GoodsTypeInfo> = Gson().fromJson(allStr, object : TypeToken<List<GoodsTypeInfo>>(){}.type)
         Log.d(TAG, "parseJson: ${goodsTypeList.size}")
+        goodsFragment.onLoadBusinessSuccess(goodsTypeList)
     }
 }
