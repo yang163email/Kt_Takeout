@@ -24,13 +24,20 @@ class GoodsTypeRvAdapter(val context: Context): RecyclerView.Adapter<RecyclerVie
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
         val goodsTypeItemView = holder?.itemView as GoodsTypeItemView
-        goodsTypeItemView.bindView(goodsTypeList[position])
+        goodsTypeItemView.bindView(goodsTypeList[position], selectPosition == position)
+        goodsTypeItemView.setOnClickListener{
+            selectPosition = position
+            notifyDataSetChanged()
+        }
     }
 
     override fun getItemCount(): Int = goodsTypeList.size
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder =
             GoodsTypeViewHolder(GoodsTypeItemView(context))
+
+    //选中的position，默认为0
+    var selectPosition = 0
 
     class GoodsTypeViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView)
 
