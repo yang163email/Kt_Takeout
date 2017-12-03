@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Paint
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.animation.*
@@ -20,6 +21,7 @@ import kotlinx.android.synthetic.main.item_goods.view.*
  *  @description : 商品条目view
  */
 class GoodsItemView: RelativeLayout {
+    val TAG = javaClass.simpleName
 
     companion object {
         //动画时间
@@ -77,6 +79,10 @@ class GoodsItemView: RelativeLayout {
             ib_minus.startAnimation(showAnimationSet)
         }
         goodsInfo.count++
+
+        val srcLocation = IntArray(2)
+        ib_add.getLocationInWindow(srcLocation)
+        Log.d(TAG, "doAddOperation: ${srcLocation[0]},${srcLocation[1]}")
     }
 
     private fun getAnimationSet(isShow: Boolean): AnimationSet {

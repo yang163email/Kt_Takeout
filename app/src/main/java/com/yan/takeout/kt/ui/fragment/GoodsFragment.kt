@@ -111,6 +111,7 @@ class GoodsFragment : Fragment() {
                 if (oldPosition != newPosition) {
                     //如果当前position与新的position不一致，需要更新类别position的位置
                     goodsTypeAdapter.selectPosition = newPosition
+                    //左侧RecyclerView滚动到指定位置
                     rv_goods_type.scrollToPosition(newPosition)
                     goodsTypeAdapter.notifyDataSetChanged()
                 }
