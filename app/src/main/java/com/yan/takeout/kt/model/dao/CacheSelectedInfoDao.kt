@@ -9,7 +9,7 @@ import java.util.concurrent.CopyOnWriteArrayList
  *  @date        : 2017/12/4 16:11
  *  @description : 选择商品缓存dao层
  */
-object CacheSelectInfoDao {
+object CacheSelectedInfoDao {
     var infos = CopyOnWriteArrayList<CacheSelectedInfo>()
 
     fun queryCacheSelectedInfoByGoodsId(goodsId: Int): Int {

@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import com.yan.takeout.kt.model.beans.Seller
+import com.yan.takeout.kt.model.dao.CacheSelectedInfoDao
 import com.yan.takeout.kt.ui.activity.BusinessActivity
 import com.yan.takeout.kt.ui.views.HomeCommonItemView
 import com.yan.takeout.kt.ui.views.HomeSellerItemView
@@ -44,7 +45,14 @@ class HomeRvAdapter(val context: Context): RecyclerView.Adapter<RecyclerView.Vie
                 val homeSellerItemView = holder?.itemView as HomeSellerItemView
                 homeSellerItemView.bindView(mDatas[position-1])
                 homeSellerItemView.setOnClickListener {
-                    context.startActivity<BusinessActivity>()
+                    //查询之前是否有点餐记录
+                    val count = CacheSelectedInfoDao.queryCacheSelectedInfoBySellerId(mDatas[position - 1].id)
+                    //是否有点餐信息，默认false
+                    var hasSelectInfo = false
+                    if (count > 0) hasSelectInfo = true
+                    context.startActivity<BusinessActivity>(
+                            "hasSelectInfo" to hasSelectInfo,
+                            "seller" to mDatas[position-1])
                 }
             }
         }

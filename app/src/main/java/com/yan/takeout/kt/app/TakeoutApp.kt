@@ -3,6 +3,7 @@ package com.yan.takeout.kt.app
 import com.mob.MobApplication
 import com.yan.takeout.kt.model.beans.CacheSelectedInfo
 import com.yan.takeout.kt.model.beans.User
+import com.yan.takeout.kt.model.dao.CacheSelectedInfoDao
 import java.util.concurrent.CopyOnWriteArrayList
 
 /**
@@ -20,5 +21,6 @@ class TakeoutApp: MobApplication() {
     override fun onCreate() {
         super.onCreate()
         sUser.id = -1   //id=-1表示未登录
+        CacheSelectedInfoDao.infos = infos
     }
 }

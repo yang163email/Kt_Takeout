@@ -1,10 +1,11 @@
 package com.yan.takeout.kt.presenter
 
-import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.yan.takeout.kt.model.beans.GoodsInfo
 import com.yan.takeout.kt.model.beans.GoodsTypeInfo
+import com.yan.takeout.kt.model.dao.CacheSelectedInfoDao
+import com.yan.takeout.kt.ui.activity.BusinessActivity
 import com.yan.takeout.kt.ui.fragment.GoodsFragment
 import org.jetbrains.anko.collections.forEachWithIndex
 import org.json.JSONObject
@@ -25,7 +26,25 @@ class GoodsFragmentPresenter(val goodsFragment: GoodsFragment) : NetPresenter() 
         val jsonObj = JSONObject(json)
         val allStr = jsonObj.getString("list")
         val goodsTypeList: List<GoodsTypeInfo> = Gson().fromJson(allStr, object : TypeToken<List<GoodsTypeInfo>>() {}.type)
-        Log.d(TAG, "parseJson: ${goodsTypeList.size}")
+        //是否有点餐记录
+        val hasSelectInfo = (goodsFragment.activity as BusinessActivity).hasSelectInfo
+
+        goodsTypeList.forEach { outer ->
+            var aTypeCount = 0
+            if (hasSelectInfo) {
+                //如果有点餐数据
+                aTypeCount = CacheSelectedInfoDao.queryCacheSelectedInfoByTypeId(outer.id)
+                outer.redDotCount = aTypeCount
+            }
+            val aTypeList = outer.list
+            aTypeList.forEach { inner ->
+                if (aTypeCount > 0) {
+                    //如果有具体类别商品
+                    val count = CacheSelectedInfoDao.queryCacheSelectedInfoByGoodsId(inner.id)
+                    inner.count = count
+                }
+            }
+        }
         goodsFragment.onLoadBusinessSuccess(goodsTypeList)
     }
 

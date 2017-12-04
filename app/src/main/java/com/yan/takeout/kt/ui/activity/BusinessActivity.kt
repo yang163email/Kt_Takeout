@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.heima.takeout.utils.PriceFormater
 import com.yan.takeout.kt.R
+import com.yan.takeout.kt.model.beans.Seller
 import com.yan.takeout.kt.ui.adapter.BusinessFragmentPagerAdapter
 import com.yan.takeout.kt.ui.adapter.CartRvAdapter
 import com.yan.takeout.kt.ui.fragment.CommentsFragment
@@ -40,10 +41,13 @@ class BusinessActivity: AppCompatActivity() {
     lateinit var cartRvAdapter: CartRvAdapter
     var clearCartDialog: AlertDialog? = null
 
+    var hasSelectInfo: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_business)
 
+        handleIntent()
         if (DeviceUtil.checkDeviceHasNavigationBar(this)) {
             //如果有导航栏，设置底部边距
             fl_Container.setPadding(0, 0 ,0, dip(48))
@@ -54,6 +58,15 @@ class BusinessActivity: AppCompatActivity() {
 
         cartRvAdapter = CartRvAdapter(this)
         initListener()
+    }
+    lateinit var seller: Seller
+    private fun handleIntent() {
+        intent?.let {
+            hasSelectInfo = it.getBooleanExtra("hasSelectInfo", false)
+            seller = it.getSerializableExtra("seller") as Seller
+            tvDeliveryFee.text = "另需配送费" + PriceFormater.format(seller.deliveryFee.toFloat())
+            tvSendPrice.text = PriceFormater.format(seller.sendPrice.toFloat()) + "起送"
+        }
     }
 
     private fun initListener() {
