@@ -1,7 +1,9 @@
 package com.yan.takeout.kt.app
 
 import com.mob.MobApplication
+import com.yan.takeout.kt.model.beans.CacheSelectedInfo
 import com.yan.takeout.kt.model.beans.User
+import java.util.concurrent.CopyOnWriteArrayList
 
 /**
  *  @author      : 楠GG
@@ -12,6 +14,8 @@ class TakeoutApp: MobApplication() {
     companion object {
         var sUser = User()
     }
+
+    val infos = CopyOnWriteArrayList<CacheSelectedInfo>()
 
     override fun onCreate() {
         super.onCreate()
