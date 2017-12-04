@@ -2,17 +2,21 @@ package com.yan.takeout.kt.ui.activity
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
 import com.heima.takeout.utils.PriceFormater
 import com.yan.takeout.kt.R
 import com.yan.takeout.kt.ui.adapter.BusinessFragmentPagerAdapter
+import com.yan.takeout.kt.ui.adapter.CartRvAdapter
 import com.yan.takeout.kt.ui.fragment.CommentsFragment
 import com.yan.takeout.kt.ui.fragment.GoodsFragment
 import com.yan.takeout.kt.ui.fragment.SellerFragment
 import com.yan.takeout.kt.utils.DeviceUtil
 import kotlinx.android.synthetic.main.activity_business.*
 import org.jetbrains.anko.dip
+import org.jetbrains.anko.find
 
 /**
  *  @author      : 楠GG
@@ -25,6 +29,9 @@ class BusinessActivity: AppCompatActivity() {
     val titles = listOf("商品", "商家", "评论")
 
     var bottomSheetView: View? = null
+    lateinit var rvCart: RecyclerView
+
+    lateinit var cartRvAdapter: CartRvAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +51,12 @@ class BusinessActivity: AppCompatActivity() {
     private fun showCart() {
         if (bottomSheetView == null) {
             bottomSheetView = layoutInflater.inflate(R.layout.cart_list, null)
+            rvCart = bottomSheetView!!.find(R.id.rvCart)
+            cartRvAdapter = CartRvAdapter(this)
+            rvCart.apply {
+                layoutManager = LinearLayoutManager(this@BusinessActivity)
+                adapter = cartRvAdapter
+            }
         }
         //判断BottomSheetLayout内容是否显示
         if (bottomSheetLayout.isSheetShowing) {
@@ -51,6 +64,9 @@ class BusinessActivity: AppCompatActivity() {
             bottomSheetLayout.dismissSheet()
         } else {
             //显示里面的内容
+            val goodsFragment = fragments[0] as GoodsFragment
+            val cartList = goodsFragment.goodsPresenter.getCartList()
+            cartRvAdapter.setCartList(cartList)
             bottomSheetLayout.showWithSheetView(bottomSheetView)
         }
     }
