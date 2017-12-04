@@ -68,4 +68,14 @@ class GoodsFragmentPresenter(val goodsFragment: GoodsFragment) : NetPresenter() 
         }
         return cartList
     }
+
+    /**
+     * 清空购物车
+     */
+    fun clearCart() {
+        val cartList = getCartList()
+        cartList.forEach {
+            it.count = 0
+        }
+    }
 }

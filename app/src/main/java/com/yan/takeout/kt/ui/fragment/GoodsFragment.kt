@@ -196,8 +196,19 @@ class GoodsFragment : Fragment() {
     }
 
     @Subscriber(tag = EventBusTag.TAG_UPDATE_GOODS_INFO, mode = ThreadMode.MAIN)
-    fun handleEvent(eventCart: EventCart) {
+    fun handleUpdateGoodsInfo(eventCart: EventCart) {
         refreshLeftRightBottomData(eventCart.goodsInfo, eventCart.view)
+    }
+
+    @Subscriber(tag = EventBusTag.TAG_CLEAR_CART, mode = ThreadMode.MAIN)
+    fun handleClearCart(response: Int) {
+        //右侧列表刷新
+        goodsAdapter.notifyDataSetChanged()
+        //左侧列表清空
+        goodsTypeList.forEach {
+            it.redDotCount = 0
+        }
+        goodsTypeAdapter.notifyDataSetChanged()
     }
 
     override fun onDestroy() {

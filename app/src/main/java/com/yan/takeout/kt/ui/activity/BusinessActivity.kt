@@ -1,11 +1,13 @@
 package com.yan.takeout.kt.ui.activity
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import com.heima.takeout.utils.PriceFormater
 import com.yan.takeout.kt.R
 import com.yan.takeout.kt.ui.adapter.BusinessFragmentPagerAdapter
@@ -14,9 +16,12 @@ import com.yan.takeout.kt.ui.fragment.CommentsFragment
 import com.yan.takeout.kt.ui.fragment.GoodsFragment
 import com.yan.takeout.kt.ui.fragment.SellerFragment
 import com.yan.takeout.kt.utils.DeviceUtil
+import com.yan.takeout.kt.utils.EventBusTag
 import kotlinx.android.synthetic.main.activity_business.*
+import org.jetbrains.anko.alert
 import org.jetbrains.anko.dip
 import org.jetbrains.anko.find
+import org.simple.eventbus.EventBus
 
 /**
  *  @author      : 楠GG
@@ -30,8 +35,10 @@ class BusinessActivity: AppCompatActivity() {
 
     var bottomSheetView: View? = null
     lateinit var rvCart: RecyclerView
+    lateinit var tvClear: TextView
 
     lateinit var cartRvAdapter: CartRvAdapter
+    var clearCartDialog: AlertDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,10 +65,12 @@ class BusinessActivity: AppCompatActivity() {
         if (bottomSheetView == null) {
             bottomSheetView = layoutInflater.inflate(R.layout.cart_list, null)
             rvCart = bottomSheetView!!.find(R.id.rvCart)
+            tvClear = bottomSheetView!!.find(R.id.tvClear)
             rvCart.apply {
                 layoutManager = LinearLayoutManager(this@BusinessActivity)
                 adapter = cartRvAdapter
             }
+            tvClear.setOnClickListener { showClearCartDialog() }
         }
         //判断BottomSheetLayout内容是否显示
         if (bottomSheetLayout.isSheetShowing) {
@@ -76,6 +85,26 @@ class BusinessActivity: AppCompatActivity() {
                 bottomSheetLayout.showWithSheetView(bottomSheetView)
             }
         }
+    }
+
+    private fun showClearCartDialog() {
+        if (clearCartDialog == null) {
+            clearCartDialog = alert("确定不吃了吗？", null) {
+                positiveButton("是，不吃了") {
+                    //清空购物车
+                    //数据层
+                    val goodsFragment = fragments[0] as GoodsFragment
+                    goodsFragment.goodsPresenter.clearCart()
+                    //ui刷新
+                    cartRvAdapter.notifyDataSetChanged()
+                    //关闭购物车
+                    showOrHideCart()
+                    EventBus.getDefault().post(1, EventBusTag.TAG_CLEAR_CART)
+                }
+                negativeButton("不，我还要吃") {}
+            }.build()
+        }
+        clearCartDialog!!.show()
     }
 
     /**

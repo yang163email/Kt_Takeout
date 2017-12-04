@@ -7,4 +7,5 @@ package com.yan.takeout.kt.utils
  */
 object EventBusTag {
     const val TAG_UPDATE_GOODS_INFO = "10"
+    const val TAG_CLEAR_CART = "11"
 }
