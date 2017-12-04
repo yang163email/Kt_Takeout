@@ -12,6 +12,7 @@ import android.widget.ImageView
 import com.yan.takeout.kt.R
 import com.yan.takeout.kt.di.component.DaggerGoodsFragmentComponent
 import com.yan.takeout.kt.di.module.GoodsFragmentModule
+import com.yan.takeout.kt.model.EventCart
 import com.yan.takeout.kt.model.beans.GoodsInfo
 import com.yan.takeout.kt.model.beans.GoodsTypeInfo
 import com.yan.takeout.kt.presenter.GoodsFragmentPresenter
@@ -85,21 +86,29 @@ class GoodsFragment : Fragment() {
         }
 
         goodsAdapter.setOnItemClickListener { view, goodsInfo ->
-            //需要找到当前点击的typeId
-            val typeId = goodsInfo.typeId
-            //找到左侧列表的位置,设置数据
-            val typePosition = goodsPresenter.getTypePositionByTypeId(goodsTypeList, typeId)
-            if (view.id == R.id.ib_add) {
-                //红点数++
-                goodsTypeList[typePosition].redDotCount++
+            refreshLeftRightBottomData(goodsInfo, view)
+            if (view.id == R.id.ib_add)
                 showParabolaAnim(view)
-            } else {
-                goodsTypeList[typePosition].redDotCount--
-            }
-            goodsTypeAdapter.setData(goodsTypeList)
-            //添加或者减少的时候，都需要更新底部购物车显示
-            parentActivity.updateCartUI()
         }
+    }
+
+    private fun refreshLeftRightBottomData(goodsInfo: GoodsInfo, view: View) {
+        //需要找到当前点击的typeId
+        val typeId = goodsInfo.typeId
+        //找到左侧列表的位置,设置数据
+        val typePosition = goodsPresenter.getTypePositionByTypeId(goodsTypeList, typeId)
+        if (view.id == R.id.ib_add) {
+            //红点数++
+            goodsTypeList[typePosition].redDotCount++
+        } else {
+            goodsTypeList[typePosition].redDotCount--
+        }
+        //刷新左侧
+        goodsTypeAdapter.setData(goodsTypeList)
+        //刷新右侧
+        goodsAdapter.notifyDataSetChanged()
+        //添加或者减少的时候，都需要更新底部购物车显示
+        parentActivity.updateCartUI()
     }
 
     private fun showParabolaAnim(view: View) {
@@ -187,8 +196,8 @@ class GoodsFragment : Fragment() {
     }
 
     @Subscriber(tag = EventBusTag.TAG_UPDATE_GOODS_INFO, mode = ThreadMode.MAIN)
-    fun handleEvent(value: Int) {
-        goodsAdapter.notifyDataSetChanged()
+    fun handleEvent(eventCart: EventCart) {
+        refreshLeftRightBottomData(eventCart.goodsInfo, eventCart.view)
     }
 
     override fun onDestroy() {

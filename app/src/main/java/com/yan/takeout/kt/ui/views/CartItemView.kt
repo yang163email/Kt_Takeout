@@ -35,7 +35,7 @@ class CartItemView : RelativeLayout {
     }
 
     private fun doMinusOperation(ibMinus: View, goodsInfo: GoodsInfo) {
-
+        itemListener?.invoke(ibMinus, goodsInfo)
     }
 
     private fun doAddOperation(ibAdd: View, goodsInfo: GoodsInfo) {

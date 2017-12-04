@@ -45,14 +45,19 @@ class BusinessActivity: AppCompatActivity() {
         vp.adapter = BusinessFragmentPagerAdapter(fragmentManager, fragments, titles)
         tabs.setupWithViewPager(vp)
 
-        bottom.setOnClickListener { showCart() }
+        cartRvAdapter = CartRvAdapter(this)
+        initListener()
     }
 
-    private fun showCart() {
+    private fun initListener() {
+        bottom.setOnClickListener { showOrHideCart() }
+        cartRvAdapter.setOnCloseBottomListener { showOrHideCart() }
+    }
+
+    private fun showOrHideCart() {
         if (bottomSheetView == null) {
             bottomSheetView = layoutInflater.inflate(R.layout.cart_list, null)
             rvCart = bottomSheetView!!.find(R.id.rvCart)
-            cartRvAdapter = CartRvAdapter(this)
             rvCart.apply {
                 layoutManager = LinearLayoutManager(this@BusinessActivity)
                 adapter = cartRvAdapter
@@ -67,7 +72,9 @@ class BusinessActivity: AppCompatActivity() {
             val goodsFragment = fragments[0] as GoodsFragment
             val cartList = goodsFragment.goodsPresenter.getCartList()
             cartRvAdapter.setCartList(cartList)
-            bottomSheetLayout.showWithSheetView(bottomSheetView)
+            if (!cartList.isEmpty()) {
+                bottomSheetLayout.showWithSheetView(bottomSheetView)
+            }
         }
     }
 

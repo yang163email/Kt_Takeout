@@ -4,6 +4,8 @@ import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
+import com.yan.takeout.kt.R
+import com.yan.takeout.kt.model.EventCart
 import com.yan.takeout.kt.model.beans.GoodsInfo
 import com.yan.takeout.kt.ui.views.CartItemView
 import com.yan.takeout.kt.utils.EventBusTag
@@ -29,13 +31,25 @@ class CartRvAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.Vi
         cartItemView.bindView(cartList[position])
         cartItemView.setOnItemClickListener { view, goodsInfo ->
             //刷新goodsInfo数据
-            goodsInfo.count++
+            val count = goodsInfo.count
+            if (view.id == R.id.ib_add) {
+                goodsInfo.count++
+            } else {
+                if (count == 1) {
+                    //倒数第二个，删除一栏
+                    cartList.remove(goodsInfo)
+                }
+                if (cartList.size == 0) {
+                    //没有货物，关闭底部栏
+                    closeBottomListener?.invoke()
+                }
+                goodsInfo.count--
+            }
             //刷新购物车内部数量与价格
             notifyDataSetChanged()
-            //左侧红点
-
-            //右侧列表
-            EventBus.getDefault().post(-1, EventBusTag.TAG_UPDATE_GOODS_INFO)
+            //左侧红点,右侧列表,底部刷新
+            val eventCart = EventCart(goodsInfo, view)
+            EventBus.getDefault().post(eventCart, EventBusTag.TAG_UPDATE_GOODS_INFO)
         }
     }
 
@@ -46,4 +60,9 @@ class CartRvAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.Vi
 
     class CartViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView)
 
+    var closeBottomListener: (() -> Unit)? = null
+
+    fun setOnCloseBottomListener(listener: () -> Unit) {
+        closeBottomListener = listener
+    }
 }

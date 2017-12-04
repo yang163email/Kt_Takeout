@@ -42,7 +42,6 @@ class GoodsAdapter(val context: Context): BaseAdapter(), StickyListHeadersAdapte
         //设置子view点击事件
         goodsItemView.setOnItemClickListener {
             itemClickListener?.invoke(it, goodsList[position])
-            notifyDataSetChanged()
         }
         return itemView
     }
