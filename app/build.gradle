@@ -70,4 +70,6 @@ dependencies {
     implementation 'com.android.support:support-v13:26+'
     //stickylistheaders
     compile 'se.emilsjolander:stickylistheaders:2.7.0'
+    //androideventbus
+    compile 'org.simple:androideventbus:1.0.5.1'
 }

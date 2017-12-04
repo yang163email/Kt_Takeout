@@ -20,7 +20,11 @@ import com.yan.takeout.kt.ui.adapter.GoodsAdapter
 import com.yan.takeout.kt.ui.adapter.GoodsTypeRvAdapter
 import com.yan.takeout.kt.utils.AnimListenerAdapter
 import com.yan.takeout.kt.utils.AnimationUtil
+import com.yan.takeout.kt.utils.EventBusTag
 import kotlinx.android.synthetic.main.fragment_goods.*
+import org.simple.eventbus.EventBus
+import org.simple.eventbus.Subscriber
+import org.simple.eventbus.ThreadMode
 import javax.inject.Inject
 
 /**
@@ -49,6 +53,7 @@ class GoodsFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        EventBus.getDefault().register(this)
         return inflater.inflate(R.layout.fragment_goods, container, false)
     }
 
@@ -179,5 +184,15 @@ class GoodsFragment : Fragment() {
             override fun onScrollStateChanged(view: AbsListView?, scrollState: Int) {
             }
         })
+    }
+
+    @Subscriber(tag = EventBusTag.TAG_UPDATE_GOODS_INFO, mode = ThreadMode.MAIN)
+    fun handleEvent(value: Int) {
+        goodsAdapter.notifyDataSetChanged()
+    }
+
+    override fun onDestroy() {
+        EventBus.getDefault().unregister(this)
+        super.onDestroy()
     }
 }
