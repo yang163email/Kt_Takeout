@@ -24,6 +24,8 @@ class BusinessActivity: AppCompatActivity() {
     val fragments = listOf(GoodsFragment(), SellerFragment(), CommentsFragment())
     val titles = listOf("商品", "商家", "评论")
 
+    var bottomSheetView: View? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_business)
@@ -35,6 +37,22 @@ class BusinessActivity: AppCompatActivity() {
         //ViewPager以及tab设置
         vp.adapter = BusinessFragmentPagerAdapter(fragmentManager, fragments, titles)
         tabs.setupWithViewPager(vp)
+
+        bottom.setOnClickListener { showCart() }
+    }
+
+    private fun showCart() {
+        if (bottomSheetView == null) {
+            bottomSheetView = layoutInflater.inflate(R.layout.cart_list, null)
+        }
+        //判断BottomSheetLayout内容是否显示
+        if (bottomSheetLayout.isSheetShowing) {
+            //关闭显示
+            bottomSheetLayout.dismissSheet()
+        } else {
+            //显示里面的内容
+            bottomSheetLayout.showWithSheetView(bottomSheetView)
+        }
     }
 
     /**
