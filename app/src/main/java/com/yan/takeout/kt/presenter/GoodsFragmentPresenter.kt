@@ -14,7 +14,7 @@ import org.json.JSONObject
  *  @date        : 2017/12/2 17:13
  *  @description : 商品p层
  */
-class GoodsFragmentPresenter(val goodsFragment: GoodsFragment): NetPresenter() {
+class GoodsFragmentPresenter(val goodsFragment: GoodsFragment) : NetPresenter() {
 
     fun getBusinessInfo(sellerId: String) {
         val businessCall = takeoutService.getBusinessInfo(sellerId)
@@ -24,7 +24,7 @@ class GoodsFragmentPresenter(val goodsFragment: GoodsFragment): NetPresenter() {
     override fun parseJson(json: String?) {
         val jsonObj = JSONObject(json)
         val allStr = jsonObj.getString("list")
-        val goodsTypeList: List<GoodsTypeInfo> = Gson().fromJson(allStr, object : TypeToken<List<GoodsTypeInfo>>(){}.type)
+        val goodsTypeList: List<GoodsTypeInfo> = Gson().fromJson(allStr, object : TypeToken<List<GoodsTypeInfo>>() {}.type)
         Log.d(TAG, "parseJson: ${goodsTypeList.size}")
         goodsFragment.onLoadBusinessSuccess(goodsTypeList)
     }
@@ -54,5 +54,18 @@ class GoodsFragmentPresenter(val goodsFragment: GoodsFragment): NetPresenter() {
         }
         //默认-1表示为找到
         return -1
+    }
+
+    /**
+     * 获取购物车的商品
+     */
+    fun getCartList(): List<GoodsInfo> {
+        val cartList = mutableListOf<GoodsInfo>()
+        goodsFragment.goodsList.forEach {
+            if (it.count > 0) {
+                cartList.add(it)
+            }
+        }
+        return cartList
     }
 }

@@ -37,9 +37,16 @@ class GoodsFragment : Fragment() {
     //左侧所有类型集合
     private lateinit var goodsTypeList: List<GoodsTypeInfo>
     //右侧所有商品集合
-    private val goodsList = mutableListOf<GoodsInfo>()
+    val goodsList = mutableListOf<GoodsInfo>()
 
     private var animShowing = false
+
+    private lateinit var parentActivity: BusinessActivity
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        parentActivity = activity as BusinessActivity
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.fragment_goods, container, false)
@@ -85,7 +92,8 @@ class GoodsFragment : Fragment() {
                 goodsTypeList[typePosition].redDotCount--
             }
             goodsTypeAdapter.setData(goodsTypeList)
-
+            //添加或者减少的时候，都需要更新底部购物车显示
+            parentActivity.updateCartUI()
         }
     }
 
@@ -101,10 +109,10 @@ class GoodsFragment : Fragment() {
         ib.x = srcLocation[0].toFloat()
         ib.y = srcLocation[1].toFloat()
         //添加一个ImageButton
-        (activity as BusinessActivity).addImageButton(ib, view.width, view.height)
+        parentActivity.addImageButton(ib, view.width, view.height)
 
         //执行抛物线动画
-        val destLocation = (activity as BusinessActivity).getCartLocation()
+        val destLocation = parentActivity.getCartLocation()
         val parabolaAnim = AnimationUtil.getParabolaAnimation(srcLocation, destLocation)
         ib.startAnimation(parabolaAnim)
         parabolaAnim.setAnimationListener(object : AnimListenerAdapter() {

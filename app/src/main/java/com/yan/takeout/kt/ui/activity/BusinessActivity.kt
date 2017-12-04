@@ -2,7 +2,9 @@ package com.yan.takeout.kt.ui.activity
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.View
 import android.widget.ImageView
+import com.heima.takeout.utils.PriceFormater
 import com.yan.takeout.kt.R
 import com.yan.takeout.kt.ui.adapter.BusinessFragmentPagerAdapter
 import com.yan.takeout.kt.ui.fragment.CommentsFragment
@@ -35,13 +37,41 @@ class BusinessActivity: AppCompatActivity() {
         tabs.setupWithViewPager(vp)
     }
 
+    /**
+     * 添加add图片
+     */
     fun addImageButton(ib: ImageView, width: Int, height: Int) {
         fl_Container.addView(ib, width, height)
     }
 
+    /**
+     * 获取购物车坐标
+     */
     fun getCartLocation(): IntArray {
         val srcLocation = IntArray(2)
         imgCart.getLocationInWindow(srcLocation)
         return srcLocation
+    }
+
+    /**
+     * 更新购物车UI
+     */
+    fun updateCartUI() {
+        var count = 0   //购物车商品数量
+        var countPrice = 0f  //购物车商品总价格
+        //获取购物车中的商品
+        val goodsFragment = fragments[0] as GoodsFragment
+        val cartList = goodsFragment.goodsPresenter.getCartList()
+        cartList.forEach {
+            count += it.count
+            countPrice += it.count * it.newPrice.toFloat()
+        }
+        tvSelectNum.text = count.toString()
+        tvCountPrice.text = PriceFormater.format(countPrice)
+        if (count > 0) {
+            tvSelectNum.visibility = View.VISIBLE
+        } else {
+            tvSelectNum.visibility = View.GONE
+        }
     }
 }
