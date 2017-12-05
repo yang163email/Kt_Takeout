@@ -211,7 +211,7 @@
         <!--AMap-->
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="您的Key"/>
+            android:value="e62b61eaeeae028a946d01ad70a3b342"/>
     </application>
 
 </manifest>
