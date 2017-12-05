@@ -7,7 +7,9 @@ import android.view.LayoutInflater
 import android.widget.RelativeLayout
 import com.yan.takeout.kt.R
 import com.yan.takeout.kt.model.db.ReceiptAddressBean
+import com.yan.takeout.kt.ui.activity.AddOrEditActivity
 import kotlinx.android.synthetic.main.item_receipt_address.view.*
+import org.jetbrains.anko.startActivity
 
 /**
  *  @author      : 楠GG
@@ -26,8 +28,12 @@ class AddressItemView : RelativeLayout {
     @SuppressLint("SetTextI18n")
     fun bindView(bean: ReceiptAddressBean) {
         tv_name.text = bean.username
+        tv_sex.text = bean.gender
         tv_phone.text = "${bean.phone},${bean.phoneOther}"
         tv_label.text = bean.label
         tv_address.text = "${bean.address},${bean.detailAddress}"
+        iv_edit.setOnClickListener {
+            context.startActivity<AddOrEditActivity>("address" to bean)
+        }
     }
 }

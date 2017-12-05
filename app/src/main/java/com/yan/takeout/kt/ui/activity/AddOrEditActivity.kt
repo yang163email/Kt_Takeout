@@ -21,26 +21,44 @@ import org.jetbrains.anko.toast
 /**
  *  @author      : 楠GG
  *  @date        : 2017/12/5 15:12
- *  @description : 添加收货地址页面
+ *  @description : 添加/修改收货地址页面
  */
-class AddReceiptActivity : AppCompatActivity() {
+class AddOrEditActivity : AppCompatActivity() {
 
     private val titles = arrayOf("无", "家", "学校", "公司")
     private val colors = arrayOf("#778899", "#ff3399", "#ff9933", "#33ff99")
 
     private var labelDialog: AlertDialog? = null
     lateinit var addressDao: AddressDao
+    var addressBean: ReceiptAddressBean? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_edit_receipt_address)
-
+        handleIntent()
         addressDao = AddressDao(this)
         if (DeviceUtil.checkDeviceHasNavigationBar(this)) {
             //如果有导航栏，设置底部边距
             activity_add_address.setPadding(0, 0 ,0, dip(48))
         }
         initListener()
+    }
+
+    private fun handleIntent() {
+        if (intent.hasExtra("address")) {
+            addressBean = intent.getParcelableExtra("address")
+            //显示数据到界面上
+            addressBean?.let {
+                et_name.setText(it.username)
+                if ("先生" == it.gender) rb_man.isChecked = true
+                else rb_women.isChecked = true
+                et_phone.setText(it.phone)
+                et_phone_other.setText(it.phoneOther)
+                et_receipt_address.setText(it.address)
+                et_detail_address.setText(it.detailAddress)
+                tv_label.text = it.label
+            }
+        }
     }
 
     private fun initListener() {
@@ -83,11 +101,40 @@ class AddReceiptActivity : AppCompatActivity() {
             val address = et_receipt_address.text.toString().trim()
             val detailAddress = et_detail_address.text.toString().trim()
             val label = tv_label.text.toString()
-            val addressBean = ReceiptAddressBean(999, username, gender, phone, phoneOther, address, detailAddress, label)
-            addressDao.addReceiptAddressBean(addressBean)
-            toast("新增成功")
+            if (addressBean == null)
+                insertAddress(username, gender, phone, phoneOther, address, detailAddress, label)
+            else
+                updateAddress(username, gender, phone, phoneOther, address, detailAddress, label)
             finish()
         }
+    }
+
+    /**
+     * 更新地址
+     */
+    private fun updateAddress(username: String, gender: String, phone: String, phoneOther: String,
+                              address: String, detailAddress: String, label: String) {
+        addressBean?.let {
+            it.username = username
+            it.gender = gender
+            it.phone = phone
+            it.phoneOther = phoneOther
+            it.address = address
+            it.detailAddress = detailAddress
+            it.label = label
+            addressDao.updateReceiptAddressBean(it)
+        }
+        toast("修改成功")
+    }
+
+    /**
+     * 新增地址
+     */
+    private fun insertAddress(username: String, gender: String, phone: String, phoneOther: String,
+                              address: String, detailAddress: String, label: String) {
+        val addressBean = ReceiptAddressBean(999, username, gender, phone, phoneOther, address, detailAddress, label)
+        addressDao.addReceiptAddressBean(addressBean)
+        toast("新增成功")
     }
 
     private fun checkReceiptAddressInfo(): Boolean {

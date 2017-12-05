@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager
 import com.yan.takeout.kt.R
 import com.yan.takeout.kt.model.dao.AddressDao
 import com.yan.takeout.kt.ui.adapter.AddressRvAdapter
+import com.yan.takeout.kt.ui.views.RecycleViewDivider
 import com.yan.takeout.kt.utils.DeviceUtil
 import kotlinx.android.synthetic.main.activity_address_list.*
 import org.jetbrains.anko.dip
@@ -34,12 +35,14 @@ class ReceiptActivity: AppCompatActivity() {
         rv_receipt_address.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = addressAdapter
+            //添加分隔线
+            addItemDecoration(RecycleViewDivider(context, LinearLayoutManager.HORIZONTAL))
         }
         initListener()
     }
 
     private fun initListener() {
-        tv_add_address.setOnClickListener { startActivity<AddReceiptActivity>() }
+        tv_add_address.setOnClickListener { startActivity<AddOrEditActivity>() }
     }
 
     override fun onStart() {

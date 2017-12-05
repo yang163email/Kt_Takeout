@@ -79,7 +79,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ui.activity.AddReceiptActivity"/>
+        <activity android:name=".ui.activity.AddOrEditActivity"/>
 
 
 
