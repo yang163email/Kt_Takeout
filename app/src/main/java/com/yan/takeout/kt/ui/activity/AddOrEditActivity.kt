@@ -16,6 +16,7 @@ import com.yan.takeout.kt.utils.DeviceUtil
 import com.yan.takeout.kt.utils.TextWatcherAdapter
 import kotlinx.android.synthetic.main.activity_add_edit_receipt_address.*
 import org.jetbrains.anko.dip
+import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 
 /**
@@ -75,6 +76,7 @@ class AddOrEditActivity : AppCompatActivity() {
         ib_delete_phone_other.setOnClickListener { et_phone_other.setText("") }
         ib_select_label.setOnClickListener { selectLabel() }
         btn_ok.setOnClickListener { clickConfirm() }
+        btn_location_address.setOnClickListener { startActivity<MapLocationActivity>() }
         et_phone.addTextChangedListener(object : TextWatcherAdapter() {
 
             override fun afterTextChanged(s: Editable?) {
