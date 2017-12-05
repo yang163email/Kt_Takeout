@@ -151,6 +151,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.activity.BusinessActivity"/>
+        <activity android:name=".ui.activity.ConfirmOrderActivity"/>
 
         <!-- Required SDK核心功能-->
         <service

@@ -4,10 +4,8 @@ import android.app.AlertDialog
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
-import android.widget.TextView
 import com.heima.takeout.utils.PriceFormater
 import com.yan.takeout.kt.R
 import com.yan.takeout.kt.model.beans.Seller
@@ -20,9 +18,10 @@ import com.yan.takeout.kt.ui.fragment.SellerFragment
 import com.yan.takeout.kt.utils.DeviceUtil
 import com.yan.takeout.kt.utils.EventBusTag
 import kotlinx.android.synthetic.main.activity_business.*
+import kotlinx.android.synthetic.main.cart_list.view.*
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.dip
-import org.jetbrains.anko.find
+import org.jetbrains.anko.startActivity
 import org.simple.eventbus.EventBus
 
 /**
@@ -36,8 +35,6 @@ class BusinessActivity: AppCompatActivity() {
     val titles = listOf("商品", "商家", "评论")
 
     var bottomSheetView: View? = null
-    lateinit var rvCart: RecyclerView
-    lateinit var tvClear: TextView
 
     lateinit var cartRvAdapter: CartRvAdapter
     var clearCartDialog: AlertDialog? = null
@@ -74,18 +71,17 @@ class BusinessActivity: AppCompatActivity() {
     private fun initListener() {
         bottom.setOnClickListener { showOrHideCart() }
         cartRvAdapter.setOnCloseBottomListener { showOrHideCart() }
+        tvSubmit.setOnClickListener { startActivity<ConfirmOrderActivity>() }
     }
 
     private fun showOrHideCart() {
         if (bottomSheetView == null) {
             bottomSheetView = layoutInflater.inflate(R.layout.cart_list, null)
-            rvCart = bottomSheetView!!.find(R.id.rvCart)
-            tvClear = bottomSheetView!!.find(R.id.tvClear)
-            rvCart.apply {
+            bottomSheetView!!.rvCart.apply {
                 layoutManager = LinearLayoutManager(this@BusinessActivity)
                 adapter = cartRvAdapter
             }
-            tvClear.setOnClickListener { showClearCartDialog() }
+            bottomSheetView!!.tvClear.setOnClickListener { showClearCartDialog() }
         }
         //判断BottomSheetLayout内容是否显示
         if (bottomSheetLayout.isSheetShowing) {
@@ -160,6 +156,14 @@ class BusinessActivity: AppCompatActivity() {
             tvSelectNum.visibility = View.VISIBLE
         } else {
             tvSelectNum.visibility = View.GONE
+        }
+        //是否显示结算按钮
+        if (countPrice >= seller.sendPrice.toFloat()) {
+            tvSendPrice.visibility = View.GONE
+            tvSubmit.visibility = View.VISIBLE
+        } else {
+            tvSendPrice.visibility = View.VISIBLE
+            tvSubmit.visibility = View.GONE
         }
     }
 }
