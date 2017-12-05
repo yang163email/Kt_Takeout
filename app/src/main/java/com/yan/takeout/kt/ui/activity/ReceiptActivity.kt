@@ -2,7 +2,10 @@ package com.yan.takeout.kt.ui.activity
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
 import com.yan.takeout.kt.R
+import com.yan.takeout.kt.model.dao.AddressDao
+import com.yan.takeout.kt.ui.adapter.AddressRvAdapter
 import com.yan.takeout.kt.utils.DeviceUtil
 import kotlinx.android.synthetic.main.activity_address_list.*
 import org.jetbrains.anko.dip
@@ -14,6 +17,8 @@ import org.jetbrains.anko.startActivity
  *  @description : 收货地址页面
  */
 class ReceiptActivity: AppCompatActivity() {
+    lateinit var addressDao: AddressDao
+    lateinit var addressAdapter: AddressRvAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,10 +29,24 @@ class ReceiptActivity: AppCompatActivity() {
             activity_address_list.setPadding(0, 0 ,0, dip(48))
         }
 
+        addressDao = AddressDao(this)
+        addressAdapter = AddressRvAdapter(this)
+        rv_receipt_address.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = addressAdapter
+        }
         initListener()
     }
 
     private fun initListener() {
         tv_add_address.setOnClickListener { startActivity<AddReceiptActivity>() }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val allAddress = addressDao.queryAllAddress()
+        if (allAddress.isNotEmpty()) {
+            addressAdapter.setAddressList(allAddress)
+        }
     }
 }

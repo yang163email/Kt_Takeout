@@ -43,11 +43,12 @@ class AddressDao(context: Context) {
         }
     }
 
-    fun queryAllAddress() {
-        try {
+    fun queryAllAddress(): List<ReceiptAddressBean> {
+        return try {
             addressDao.queryForAll()
         } catch (e: Exception) {
             Log.d(TAG, "queryAllAddress: ${e.localizedMessage}")
+            mutableListOf()
         }
     }
 }
