@@ -147,7 +147,7 @@ class GoodsFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        goodsPresenter.getBusinessInfo("1")
+        goodsPresenter.getBusinessInfo(parentActivity.seller.id.toString())
     }
 
     fun onLoadBusinessSuccess(goodsTypeList: List<GoodsTypeInfo>) {

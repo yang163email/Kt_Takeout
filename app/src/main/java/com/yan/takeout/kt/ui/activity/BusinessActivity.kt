@@ -42,6 +42,7 @@ class BusinessActivity: AppCompatActivity() {
     var clearCartDialog: AlertDialog? = null
 
     var hasSelectInfo: Boolean = false
+    lateinit var seller: Seller
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,7 +60,7 @@ class BusinessActivity: AppCompatActivity() {
         cartRvAdapter = CartRvAdapter(this)
         initListener()
     }
-    lateinit var seller: Seller
+
     private fun handleIntent() {
         intent?.let {
             hasSelectInfo = it.getBooleanExtra("hasSelectInfo", false)

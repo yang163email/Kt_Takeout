@@ -46,6 +46,8 @@ class GoodsFragmentPresenter(val goodsFragment: GoodsFragment) : NetPresenter() 
             }
         }
         goodsFragment.onLoadBusinessSuccess(goodsTypeList)
+        //更新购物车UI
+        (goodsFragment.activity as BusinessActivity).updateCartUI()
     }
 
     /**

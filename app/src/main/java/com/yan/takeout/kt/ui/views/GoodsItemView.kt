@@ -11,8 +11,11 @@ import android.widget.RelativeLayout
 import com.heima.takeout.utils.PriceFormater
 import com.squareup.picasso.Picasso
 import com.yan.takeout.kt.R
+import com.yan.takeout.kt.model.beans.CacheSelectedInfo
 import com.yan.takeout.kt.model.beans.GoodsInfo
+import com.yan.takeout.kt.model.dao.CacheSelectedInfoDao
 import com.yan.takeout.kt.utils.AnimationUtil
+import com.yan.takeout.kt.utils.Constants
 import kotlinx.android.synthetic.main.item_goods.view.*
 
 /**
@@ -59,6 +62,11 @@ class GoodsItemView: RelativeLayout {
             val showAnimationSet: AnimationSet = AnimationUtil.getAnimationSet(false)
             tv_count.startAnimation(showAnimationSet)
             ib_minus.startAnimation(showAnimationSet)
+            //删除缓存
+            CacheSelectedInfoDao.deleteCacheSelectedInfo(goodsInfo.id)
+        } else {
+            //更新缓存
+            CacheSelectedInfoDao.updateCacheSelectedInfo(goodsInfo.id, Constants.MINUS)
         }
         goodsInfo.count--
     }
@@ -71,6 +79,12 @@ class GoodsItemView: RelativeLayout {
             val showAnimationSet: AnimationSet = AnimationUtil.getAnimationSet(true)
             tv_count.startAnimation(showAnimationSet)
             ib_minus.startAnimation(showAnimationSet)
+            //添加缓存
+            CacheSelectedInfoDao.addCacheSelectedInfo(CacheSelectedInfo(
+                    goodsInfo.sellerId, goodsInfo.typeId, goodsInfo.id, 1))
+        } else {
+            //更新缓存
+            CacheSelectedInfoDao.updateCacheSelectedInfo(goodsInfo.id, Constants.ADD)
         }
         goodsInfo.count++
     }

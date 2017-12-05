@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import com.yan.takeout.kt.R
 import com.yan.takeout.kt.model.EventCart
 import com.yan.takeout.kt.model.beans.GoodsInfo
+import com.yan.takeout.kt.model.dao.CacheSelectedInfoDao
 import com.yan.takeout.kt.ui.views.CartItemView
+import com.yan.takeout.kt.utils.Constants
 import com.yan.takeout.kt.utils.EventBusTag
 import org.simple.eventbus.EventBus
 
@@ -34,14 +36,21 @@ class CartRvAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.Vi
             val count = goodsInfo.count
             if (view.id == R.id.ib_add) {
                 goodsInfo.count++
+                //更新缓存
+                CacheSelectedInfoDao.updateCacheSelectedInfo(goodsInfo.id, Constants.ADD)
             } else {
                 if (count == 1) {
                     //倒数第二个，删除一栏
                     cartList.remove(goodsInfo)
-                }
-                if (cartList.size == 0) {
-                    //没有货物，关闭底部栏
-                    closeBottomListener?.invoke()
+                    if (cartList.size == 0) {
+                        //没有货物，关闭底部栏
+                        closeBottomListener?.invoke()
+                    }
+                    //删除缓存
+                    CacheSelectedInfoDao.deleteCacheSelectedInfo(goodsInfo.id)
+                } else {
+                    //更新缓存
+                    CacheSelectedInfoDao.updateCacheSelectedInfo(goodsInfo.id, Constants.MINUS)
                 }
                 goodsInfo.count--
             }
@@ -60,7 +69,7 @@ class CartRvAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.Vi
 
     class CartViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView)
 
-    var closeBottomListener: (() -> Unit)? = null
+    private var closeBottomListener: (() -> Unit)? = null
 
     fun setOnCloseBottomListener(listener: () -> Unit) {
         closeBottomListener = listener

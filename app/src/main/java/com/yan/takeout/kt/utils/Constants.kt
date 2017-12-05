@@ -7,5 +7,5 @@ package com.yan.takeout.kt.utils
  */
 object Constants {
     const val ADD = 1
-    const val MINUS = 1
+    const val MINUS = 2
 }
