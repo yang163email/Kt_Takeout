@@ -11,6 +11,7 @@ import android.widget.TextView
 import com.heima.takeout.utils.PriceFormater
 import com.yan.takeout.kt.R
 import com.yan.takeout.kt.model.beans.Seller
+import com.yan.takeout.kt.model.dao.CacheSelectedInfoDao
 import com.yan.takeout.kt.ui.adapter.BusinessFragmentPagerAdapter
 import com.yan.takeout.kt.ui.adapter.CartRvAdapter
 import com.yan.takeout.kt.ui.fragment.CommentsFragment
@@ -111,9 +112,12 @@ class BusinessActivity: AppCompatActivity() {
                     goodsFragment.goodsPresenter.clearCart()
                     //ui刷新
                     cartRvAdapter.notifyDataSetChanged()
+                    updateCartUI()
                     //关闭购物车
                     showOrHideCart()
                     EventBus.getDefault().post(1, EventBusTag.TAG_CLEAR_CART)
+                    //清空缓存
+                    CacheSelectedInfoDao.clearCacheSelectedInfo(seller.id)
                 }
                 negativeButton("不，我还要吃") {}
             }.build()
