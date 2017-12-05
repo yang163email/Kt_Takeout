@@ -35,8 +35,8 @@ class AddOrEditActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_edit_receipt_address)
-        handleIntent()
         addressDao = AddressDao(this)
+        handleIntent()
         if (DeviceUtil.checkDeviceHasNavigationBar(this)) {
             //如果有导航栏，设置底部边距
             activity_add_address.setPadding(0, 0 ,0, dip(48))
@@ -57,6 +57,13 @@ class AddOrEditActivity : AppCompatActivity() {
                 et_receipt_address.setText(it.address)
                 et_detail_address.setText(it.detailAddress)
                 tv_label.text = it.label
+                ib_delete.visibility = View.VISIBLE
+                ib_delete.setOnClickListener { inner ->
+                    //删除地址
+                    addressDao.deleteReceiptAddressBean(it)
+                    toast("删除成功")
+                    finish()
+                }
             }
         }
     }
