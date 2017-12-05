@@ -5,7 +5,7 @@ import android.database.sqlite.SQLiteDatabase
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper
 import com.j256.ormlite.support.ConnectionSource
 import com.j256.ormlite.table.TableUtils
-import com.yan.takeout.kt.model.beans.User
+import com.yan.takeout.kt.model.db.User
 
 /**
  *  @author      : 楠GG

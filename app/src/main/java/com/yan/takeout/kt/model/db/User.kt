@@ -1,4 +1,4 @@
-package com.yan.takeout.kt.model.beans
+package com.yan.takeout.kt.model.db
 
 import com.j256.ormlite.field.DatabaseField
 import com.j256.ormlite.table.DatabaseTable

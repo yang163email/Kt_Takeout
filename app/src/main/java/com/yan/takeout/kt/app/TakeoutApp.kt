@@ -2,7 +2,7 @@ package com.yan.takeout.kt.app
 
 import com.mob.MobApplication
 import com.yan.takeout.kt.model.beans.CacheSelectedInfo
-import com.yan.takeout.kt.model.beans.User
+import com.yan.takeout.kt.model.db.User
 import com.yan.takeout.kt.model.dao.CacheSelectedInfoDao
 import java.util.concurrent.CopyOnWriteArrayList
 

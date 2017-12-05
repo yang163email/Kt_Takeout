@@ -5,7 +5,7 @@ import com.google.gson.Gson
 import com.j256.ormlite.android.AndroidDatabaseConnection
 import com.j256.ormlite.dao.Dao
 import com.yan.takeout.kt.app.TakeoutApp
-import com.yan.takeout.kt.model.beans.User
+import com.yan.takeout.kt.model.db.User
 import com.yan.takeout.kt.model.dao.TakeoutOpenHelper
 import com.yan.takeout.kt.ui.activity.LoginActivity
 import java.sql.Savepoint
