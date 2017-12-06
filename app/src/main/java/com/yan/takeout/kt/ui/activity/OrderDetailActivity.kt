@@ -8,17 +8,13 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.amap.api.maps2d.AMap
 import com.amap.api.maps2d.CameraUpdateFactory
-import com.amap.api.maps2d.model.BitmapDescriptorFactory
-import com.amap.api.maps2d.model.LatLng
-import com.amap.api.maps2d.model.Marker
-import com.amap.api.maps2d.model.MarkerOptions
+import com.amap.api.maps2d.model.*
 import com.heima.takeout.utils.OrderObservable
 import com.yan.takeout.kt.R
 import com.yan.takeout.kt.model.beans.Order
 import kotlinx.android.synthetic.main.activity_order_detail.*
 import org.json.JSONObject
 import java.util.*
-
 
 
 /**
@@ -31,6 +27,7 @@ class OrderDetailActivity : AppCompatActivity(), Observer {
     private lateinit var order: Order
     private lateinit var aMap: AMap
     private lateinit var riderMarker: Marker
+    private val points = mutableListOf<LatLng>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,6 +88,8 @@ class OrderDetailActivity : AppCompatActivity(), Observer {
                 }
                 OrderObservable.ORDERTYPE_DISTRIBUTION -> {
                     //骑士登场
+                    //将坐标添加到集合中
+                    points.add(LatLng(22.5716940000,113.9537550000))
                     val imageView = ImageView(this)
                     imageView.setImageResource(R.mipmap.order_rider_icon)
                     riderMarker = aMap.addMarker(MarkerOptions()
@@ -102,10 +101,20 @@ class OrderDetailActivity : AppCompatActivity(), Observer {
                 OrderObservable.ORDERTYPE_DISTRIBUTION_RIDER_GIVE_MEAL,
                 OrderObservable.ORDERTYPE_DISTRIBUTION_RIDER_TAKE_MEAL -> {
                     //移动骑士，更新骑手位置
+                    //先获取经纬度
+                    val lat = jsonObj.getString("lat")
+                    val lng = jsonObj.getString("lng")
                     riderMarker.hideInfoWindow()
-                    riderMarker.position = LatLng(22.5693020000,113.9508260000)
-                    aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                            LatLng(22.5693020000,113.9508260000), 16f))
+                    val latLng = LatLng(lat.toDouble(), lng.toDouble())
+                    riderMarker.position = latLng
+                    aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16f))
+                    //添加到集合中
+                    points.add(latLng)
+                    val polyline = aMap.addPolyline(
+                            PolylineOptions().color(Color.RED)
+                            .width(2f)
+                            .add(points[points.size - 1], points[points.size - 2])
+                    )
                 }
             }
         }
