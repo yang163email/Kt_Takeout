@@ -6,8 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import com.heima.takeout.utils.OrderObservable
 import com.yan.takeout.kt.model.beans.Order
+import com.yan.takeout.kt.ui.activity.OrderDetailActivity
 import com.yan.takeout.kt.ui.views.OrderItemView
 import org.jetbrains.anko.collections.forEachWithIndex
+import org.jetbrains.anko.startActivity
 import org.json.JSONObject
 import java.util.*
 
@@ -50,6 +52,9 @@ class OrderRvAdapter(val context: Context): RecyclerView.Adapter<RecyclerView.Vi
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
         val orderItemView = holder?.itemView as OrderItemView
         orderItemView.bindView(orderList[position])
+        orderItemView.setOnClickListener {
+            context.startActivity<OrderDetailActivity>("order" to orderList[position])
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder =

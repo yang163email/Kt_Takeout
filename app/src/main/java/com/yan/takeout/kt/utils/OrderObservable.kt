@@ -54,4 +54,32 @@ class OrderObservable private constructor() : Observable() {
         }
         return typeInfo
     }
+
+    fun getIndex(type: String): Int {
+        var index = -1
+        //        String typeInfo = "";
+        when (type) {
+            ORDERTYPE_UNPAYMENT -> {
+            }
+            ORDERTYPE_SUBMIT ->
+                //                typeInfo = "已提交订单";
+                index = 0
+            ORDERTYPE_RECEIVEORDER ->
+                //                typeInfo = "商家接单";
+                index = 1
+            ORDERTYPE_DISTRIBUTION,
+            ORDERTYPE_DISTRIBUTION_RIDER_GIVE_MEAL,
+            ORDERTYPE_DISTRIBUTION_RIDER_TAKE_MEAL,
+            ORDERTYPE_DISTRIBUTION_RIDER_RECEIVE ->
+                //                typeInfo = "配送中";
+                index = 2
+            ORDERTYPE_SERVED ->
+                //                typeInfo = "已送达";
+                index = 3
+            ORDERTYPE_CANCELLEDORDER -> {
+            }
+        }//                typeInfo = "未支付";
+        //                typeInfo = "取消的订单";
+        return index
+    }
 }

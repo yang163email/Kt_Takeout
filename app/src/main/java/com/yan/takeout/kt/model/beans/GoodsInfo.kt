@@ -1,5 +1,7 @@
 package com.yan.takeout.kt.model.beans
 
+import java.io.Serializable
+
 data class GoodsInfo(
     var id: Int,    //商品id
     var name: String,   //商品名称
@@ -14,4 +16,4 @@ data class GoodsInfo(
     var typeId: Int,    //具体大类id
     var typeName: String,   //对应大类id名
     var count: Int = 0
-    )
+    ) : Serializable

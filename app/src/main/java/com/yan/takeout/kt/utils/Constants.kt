@@ -6,6 +6,7 @@ package com.yan.takeout.kt.utils
  *  @description : 常量类
  */
 object Constants {
+    const val DOMAIN = "http://139.199.157.18/TakeoutService/"
     const val ADD = 1
     const val MINUS = 2
 }

@@ -3,6 +3,7 @@ package com.yan.takeout.kt.presenter
 import android.util.Log
 import com.yan.takeout.kt.model.beans.ResponseInfo
 import com.yan.takeout.kt.model.net.TakeoutService
+import com.yan.takeout.kt.utils.Constants
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -22,7 +23,7 @@ abstract class NetPresenter {
     val takeoutService: TakeoutService
     init {
         val retrofit = Retrofit.Builder()
-                .baseUrl("http://192.168.56.1:8080/TakeoutService/")
+                .baseUrl(Constants.DOMAIN)
                 .addConverterFactory(GsonConverterFactory.create()) //添加gson转换工厂
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())  //添加rxjava适配工厂
                 .build()
