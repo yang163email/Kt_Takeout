@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import com.amap.api.maps2d.AMap
+import com.amap.api.maps2d.AMapUtils
 import com.amap.api.maps2d.CameraUpdateFactory
 import com.amap.api.maps2d.model.*
 import com.heima.takeout.utils.OrderObservable
@@ -15,6 +16,8 @@ import com.yan.takeout.kt.model.beans.Order
 import kotlinx.android.synthetic.main.activity_order_detail.*
 import org.json.JSONObject
 import java.util.*
+
+
 
 
 /**
@@ -69,55 +72,77 @@ class OrderDetailActivity : AppCompatActivity(), Observer {
             when (order.type) {
                 OrderObservable.ORDERTYPE_RECEIVEORDER -> {
                     //显示地图
-                    mMapView.visibility = View.VISIBLE
-                    //当前位置
-                    aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                            LatLng(22.5693400000,113.9537130000), 16f))
-                    //标注卖家位置    鸡煲店
-                    val sellerMarker = aMap.addMarker(MarkerOptions()
-                            .position(LatLng(22.5722970000, 113.9509130000))
-                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.order_seller_icon))
-                            .title("鸡煲店").snippet("一个渺小的卖家"))
-                    //标注买家位置    B座
-                    val imageView = ImageView(this)
-                    imageView.setImageResource(R.mipmap.order_buyer_icon)
-                    val buyerMarker = aMap.addMarker(MarkerOptions()
-                            .position(LatLng(22.5692040000,113.9533410000))
-                            .icon(BitmapDescriptorFactory.fromView(imageView))
-                            .title("B座").snippet("一个霸气的买家"))
+                    receiveOrderState()
                 }
                 OrderObservable.ORDERTYPE_DISTRIBUTION -> {
                     //骑士登场
-                    //将坐标添加到集合中
-                    points.add(LatLng(22.5716940000,113.9537550000))
-                    val imageView = ImageView(this)
-                    imageView.setImageResource(R.mipmap.order_rider_icon)
-                    riderMarker = aMap.addMarker(MarkerOptions()
-                            .position(LatLng(22.5716940000,113.9537550000))
-                            .icon(BitmapDescriptorFactory.fromView(imageView))
-                            .title("骑士"))
-                    riderMarker.showInfoWindow()
+                    distributionState()
                 }
                 OrderObservable.ORDERTYPE_DISTRIBUTION_RIDER_GIVE_MEAL,
                 OrderObservable.ORDERTYPE_DISTRIBUTION_RIDER_TAKE_MEAL -> {
                     //移动骑士，更新骑手位置
                     //先获取经纬度
-                    val lat = jsonObj.getString("lat")
-                    val lng = jsonObj.getString("lng")
-                    riderMarker.hideInfoWindow()
-                    val latLng = LatLng(lat.toDouble(), lng.toDouble())
-                    riderMarker.position = latLng
-                    aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16f))
-                    //添加到集合中
-                    points.add(latLng)
-                    val polyline = aMap.addPolyline(
-                            PolylineOptions().color(Color.RED)
-                            .width(2f)
-                            .add(points[points.size - 1], points[points.size - 2])
-                    )
+                    riderTakeMealState(jsonObj)
                 }
             }
         }
+    }
+
+    private fun riderTakeMealState(jsonObj: JSONObject) {
+        //移动骑士，更新骑手位置
+        //先获取经纬度
+        val lat = jsonObj.getString("lat")
+        val lng = jsonObj.getString("lng")
+        riderMarker.hideInfoWindow()
+        val latLng = LatLng(lat.toDouble(), lng.toDouble())
+        riderMarker.position = latLng
+        aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16f))
+        //测距
+        val distance = AMapUtils.calculateLineDistance(latLng,
+                LatLng(22.5692040000, 113.9533410000))
+        riderMarker.snippet = "距离您还有${Math.abs(distance)}米"
+        riderMarker.showInfoWindow()
+
+        //添加到集合中
+        points.add(latLng)
+        val polyline = aMap.addPolyline(
+                PolylineOptions().color(Color.RED)
+                        .width(2f)
+                        .add(points[points.size - 1], points[points.size - 2])
+        )
+    }
+
+    private fun distributionState() {
+        //骑士登场
+        //将坐标添加到集合中
+        points.add(LatLng(22.5716940000, 113.9537550000))
+        val imageView = ImageView(this)
+        imageView.setImageResource(R.mipmap.order_rider_icon)
+        riderMarker = aMap.addMarker(MarkerOptions()
+                .position(LatLng(22.5716940000, 113.9537550000))
+                .icon(BitmapDescriptorFactory.fromView(imageView))
+                .title("骑士"))
+        riderMarker.showInfoWindow()
+    }
+
+    private fun receiveOrderState() {
+        //显示地图
+        mMapView.visibility = View.VISIBLE
+        //当前位置
+        aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                LatLng(22.5693400000, 113.9537130000), 16f))
+        //标注卖家位置    鸡煲店
+        val sellerMarker = aMap.addMarker(MarkerOptions()
+                .position(LatLng(22.5722970000, 113.9509130000))
+                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.order_seller_icon))
+                .title("鸡煲店").snippet("一个渺小的卖家"))
+        //标注买家位置    B座
+        val imageView = ImageView(this)
+        imageView.setImageResource(R.mipmap.order_buyer_icon)
+        val buyerMarker = aMap.addMarker(MarkerOptions()
+                .position(LatLng(22.5692040000, 113.9533410000))
+                .icon(BitmapDescriptorFactory.fromView(imageView))
+                .title("B座").snippet("一个霸气的买家"))
     }
 
     override fun onDestroy() {
