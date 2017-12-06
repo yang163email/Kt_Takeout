@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.yan.takeout.kt"
-    xmlns:tools="http://schemas.android.com/tools">
+    package="com.yan.takeout.kt">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <!--mob sdk start-->
@@ -39,6 +38,12 @@
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <!--jpush sdk end-->
+
+    <!--AMap sdk start-->
+    <!--用于申请获取蓝牙信息进行室内定位-->
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <!--AMap sdk end-->
 
     <application
         android:name=".app.TakeoutApp"
@@ -212,6 +217,7 @@
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="e62b61eaeeae028a946d01ad70a3b342"/>
+        <service android:name="com.amap.api.location.APSService"/>
     </application>
 
 </manifest>
