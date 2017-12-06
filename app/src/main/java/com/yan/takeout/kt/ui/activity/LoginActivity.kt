@@ -9,9 +9,9 @@ import android.util.Log
 import cn.smssdk.EventHandler
 import cn.smssdk.SMSSDK
 import com.heima.takeout.utils.SMSUtil
+import com.yan.takeout.kt.R
 import com.yan.takeout.kt.di.component.DaggerLoginActivityComponent
 import com.yan.takeout.kt.di.module.LoginActivityModule
-import com.yan.takeout.kt.R
 import com.yan.takeout.kt.presenter.LoginActivityPresenter
 import kotlinx.android.synthetic.main.activity_login.*
 import org.jetbrains.anko.toast
@@ -106,10 +106,10 @@ class LoginActivity: AppCompatActivity() {
         iv_login.setOnClickListener {
             val phoneNum = et_user_phone.text.toString().trim()
             val code = et_user_code.text.toString().trim()
-//            if (SMSUtil.judgePhoneNums(this, phoneNum) and !code.isEmpty()) {
-//                SMSSDK.submitVerificationCode("86", phoneNum, code)
-//            }
-            loginActivityPresenter.loginByPhone(phoneNum)
+            if (SMSUtil.judgePhoneNums(this, phoneNum) and !code.isEmpty()) {
+                SMSSDK.submitVerificationCode("86", phoneNum, code)
+            }
+//            loginActivityPresenter.loginByPhone(phoneNum)
         }
     }
 

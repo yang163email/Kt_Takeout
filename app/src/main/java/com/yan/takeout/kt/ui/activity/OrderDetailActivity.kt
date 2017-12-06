@@ -17,9 +17,6 @@ import kotlinx.android.synthetic.main.activity_order_detail.*
 import org.json.JSONObject
 import java.util.*
 
-
-
-
 /**
  *  @author      : 楠GG
  *  @date        : 2017/12/6 14:48
