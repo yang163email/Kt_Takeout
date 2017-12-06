@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.v13.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import com.amap.api.location.AMapLocation
 import com.amap.api.location.AMapLocationClient
@@ -18,6 +19,8 @@ import com.amap.api.services.core.PoiItem
 import com.amap.api.services.poisearch.PoiResult
 import com.amap.api.services.poisearch.PoiSearch
 import com.yan.takeout.kt.R
+import com.yan.takeout.kt.ui.adapter.AroundRvAdapter
+import kotlinx.android.synthetic.main.activity_map_location.*
 import org.jetbrains.anko.toast
 
 
@@ -29,33 +32,30 @@ import org.jetbrains.anko.toast
  *  @description : 地图定位界面
  */
 class MapLocationActivity : AppCompatActivity(), PoiSearch.OnPoiSearchListener {
-    override fun onPoiItemSearched(poiItem: PoiItem?, rCode: Int) {
-
-    }
-
-    override fun onPoiSearched(poiResult: PoiResult?, rCode: Int) {
-        if (rCode == 1000) {
-            //成功
-            poiResult?.let {
-                val poiItems = it.pois
-                toast("一共有${poiItems.size}个兴趣点")
-            }
-        }
-    }
 
     //声明AMapLocationClient类对象
     lateinit var mLocationClient: AMapLocationClient
 
     lateinit var aMap: AMap
+    lateinit var aroundAdapter: AroundRvAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map_location)
 
+        initRecyclerView()
         val mapView = findViewById<View>(R.id.map) as MapView
         mapView.onCreate(savedInstanceState)// 此方法必须重写
         aMap = mapView.map
 
         checkPermission()
+    }
+
+    private fun initRecyclerView() {
+        aroundAdapter = AroundRvAdapter(this)
+        rv_around.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = aroundAdapter
+        }
     }
 
     private val WRITE_COARSE_LOCATION_REQUEST_CODE: Int = 10
@@ -114,4 +114,20 @@ class MapLocationActivity : AppCompatActivity(), PoiSearch.OnPoiSearchListener {
         poiSearch.setOnPoiSearchListener(this)
         poiSearch.searchPOIAsyn()
     }
+
+    override fun onPoiItemSearched(poiItem: PoiItem?, rCode: Int) {
+
+    }
+
+    override fun onPoiSearched(poiResult: PoiResult?, rCode: Int) {
+        if (rCode == 1000) {
+            //成功
+            poiResult?.let {
+                val poiItems = it.pois
+                toast("一共有${poiItems.size}个兴趣点")
+                aroundAdapter.setPoiList(poiItems)
+            }
+        }
+    }
+
 }
