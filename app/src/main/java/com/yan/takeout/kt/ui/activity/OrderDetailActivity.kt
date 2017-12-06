@@ -10,6 +10,7 @@ import com.amap.api.maps2d.AMap
 import com.amap.api.maps2d.CameraUpdateFactory
 import com.amap.api.maps2d.model.BitmapDescriptorFactory
 import com.amap.api.maps2d.model.LatLng
+import com.amap.api.maps2d.model.Marker
 import com.amap.api.maps2d.model.MarkerOptions
 import com.heima.takeout.utils.OrderObservable
 import com.yan.takeout.kt.R
@@ -29,6 +30,7 @@ class OrderDetailActivity : AppCompatActivity(), Observer {
 
     private lateinit var order: Order
     private lateinit var aMap: AMap
+    private lateinit var riderMarker: Marker
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,7 +70,7 @@ class OrderDetailActivity : AppCompatActivity(), Observer {
             order.type = pushType
             showState()
             when (order.type) {
-                "30" -> {
+                OrderObservable.ORDERTYPE_RECEIVEORDER -> {
                     //显示地图
                     mMapView.visibility = View.VISIBLE
                     //当前位置
@@ -86,6 +88,24 @@ class OrderDetailActivity : AppCompatActivity(), Observer {
                             .position(LatLng(22.5692040000,113.9533410000))
                             .icon(BitmapDescriptorFactory.fromView(imageView))
                             .title("B座").snippet("一个霸气的买家"))
+                }
+                OrderObservable.ORDERTYPE_DISTRIBUTION -> {
+                    //骑士登场
+                    val imageView = ImageView(this)
+                    imageView.setImageResource(R.mipmap.order_rider_icon)
+                    riderMarker = aMap.addMarker(MarkerOptions()
+                            .position(LatLng(22.5716940000,113.9537550000))
+                            .icon(BitmapDescriptorFactory.fromView(imageView))
+                            .title("骑士"))
+                    riderMarker.showInfoWindow()
+                }
+                OrderObservable.ORDERTYPE_DISTRIBUTION_RIDER_GIVE_MEAL,
+                OrderObservable.ORDERTYPE_DISTRIBUTION_RIDER_TAKE_MEAL -> {
+                    //移动骑士，更新骑手位置
+                    riderMarker.hideInfoWindow()
+                    riderMarker.position = LatLng(22.5693020000,113.9508260000)
+                    aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                            LatLng(22.5693020000,113.9508260000), 16f))
                 }
             }
         }
