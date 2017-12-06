@@ -1,6 +1,8 @@
 package com.yan.takeout.kt.ui.adapter
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
@@ -24,6 +26,14 @@ class AddressRvAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
         val addressItemView = holder?.itemView as AddressItemView
         addressItemView.bindView(list[position])
+        addressItemView.setOnClickListener {
+            //点击地址
+            val activity = context as Activity
+            val data = Intent()
+            data.putExtra("address", list[position])
+            activity.setResult(Activity.RESULT_OK, data)
+            activity.finish()
+        }
     }
 
     override fun getItemCount(): Int = list.size
