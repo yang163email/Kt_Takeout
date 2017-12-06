@@ -1,11 +1,14 @@
 package com.yan.takeout.kt.ui.adapter
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import com.amap.api.services.core.PoiItem
 import com.yan.takeout.kt.ui.views.AroundItemView
+import kotlinx.android.synthetic.main.item_around_address.view.*
 
 /**
  *  @author      : 楠GG
@@ -27,6 +30,15 @@ class AroundRvAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
         val aroundItemView = holder?.itemView as AroundItemView
         aroundItemView.bindView(poiList[position])
+        aroundItemView.setOnClickListener {
+            val data = Intent()
+            data.putExtra("title", aroundItemView.tv_title.text)
+            data.putExtra("address", aroundItemView.tv_address.text)
+            (context as Activity).apply {
+                setResult(Activity.RESULT_OK, data)
+                finish()
+            }
+        }
     }
 
     override fun getItemCount(): Int = poiList.size

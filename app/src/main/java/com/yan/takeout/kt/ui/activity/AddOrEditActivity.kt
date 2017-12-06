@@ -1,6 +1,7 @@
 package com.yan.takeout.kt.ui.activity
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -16,7 +17,7 @@ import com.yan.takeout.kt.utils.DeviceUtil
 import com.yan.takeout.kt.utils.TextWatcherAdapter
 import kotlinx.android.synthetic.main.activity_add_edit_receipt_address.*
 import org.jetbrains.anko.dip
-import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.startActivityForResult
 import org.jetbrains.anko.toast
 
 /**
@@ -25,6 +26,9 @@ import org.jetbrains.anko.toast
  *  @description : 添加/修改收货地址页面
  */
 class AddOrEditActivity : AppCompatActivity() {
+    companion object {
+        const val REQ_CODE = 1001
+    }
 
     private val titles = arrayOf("无", "家", "学校", "公司")
     private val colors = arrayOf("#778899", "#ff3399", "#ff9933", "#33ff99")
@@ -76,7 +80,7 @@ class AddOrEditActivity : AppCompatActivity() {
         ib_delete_phone_other.setOnClickListener { et_phone_other.setText("") }
         ib_select_label.setOnClickListener { selectLabel() }
         btn_ok.setOnClickListener { clickConfirm() }
-        btn_location_address.setOnClickListener { startActivity<MapLocationActivity>() }
+        btn_location_address.setOnClickListener { startActivityForResult<MapLocationActivity>(REQ_CODE) }
         et_phone.addTextChangedListener(object : TextWatcherAdapter() {
 
             override fun afterTextChanged(s: Editable?) {
@@ -187,4 +191,15 @@ class AddOrEditActivity : AppCompatActivity() {
         labelDialog?.show()
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQ_CODE && resultCode == RESULT_OK) {
+            data?.let {
+                val address = it.getStringExtra("title")
+                val detailAddress = it.getStringExtra("address")
+                et_receipt_address.setText(address)
+                et_detail_address.setText(detailAddress)
+            }
+        }
+    }
 }
