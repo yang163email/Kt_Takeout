@@ -16,7 +16,15 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
+        debug {
+            buildConfigField "boolean", "LOG_DEBUG", "true"
+            buildConfigField "boolean", "USE_CANARY", "true"
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
         release {
+            buildConfigField "boolean", "LOG_DEBUG", "false"
+            buildConfigField "boolean", "USE_CANARY", "false"
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -72,4 +80,10 @@ dependencies {
     compile 'se.emilsjolander:stickylistheaders:2.7.0'
     //androideventbus
     compile 'org.simple:androideventbus:1.0.5.1'
+    //okhttp3
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp3Version"
+    //timber
+    implementation 'com.jakewharton.timber:timber:4.6.0'
+    //logger
+    compile 'com.orhanobut:logger:2.1.1'
 }

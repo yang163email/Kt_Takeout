@@ -2,14 +2,10 @@ package com.yan.takeout.kt.presenter
 
 import android.util.Log
 import com.yan.takeout.kt.model.beans.ResponseInfo
-import com.yan.takeout.kt.model.net.TakeoutService
-import com.yan.takeout.kt.utils.Constants
+import com.yan.takeout.kt.model.net.HttpManager
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
 
 /**
  *  @author      : 楠GG
@@ -20,16 +16,7 @@ abstract class NetPresenter {
 
     protected val TAG = javaClass.simpleName
 
-    val takeoutService: TakeoutService
-    init {
-        val retrofit = Retrofit.Builder()
-                .baseUrl(Constants.DOMAIN)
-                .addConverterFactory(GsonConverterFactory.create()) //添加gson转换工厂
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())  //添加rxjava适配工厂
-                .build()
-
-        takeoutService = retrofit.create<TakeoutService>(TakeoutService::class.java)
-    }
+    val takeoutService = HttpManager.instance.takeoutService
 
     val callback = object : Callback<ResponseInfo> {
         override fun onResponse(call: Call<ResponseInfo>?, response: Response<ResponseInfo>?) {
